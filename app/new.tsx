@@ -6,6 +6,7 @@ import { PlantlyButton } from "@/components/PlantlyButton";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { usePlantStore } from "@/store/plantsStore";
 
 export default function NewScreen() {
   return (
@@ -26,6 +27,7 @@ export default function NewScreen() {
 function PlantlyForm() {
   const [name, setName] = useState("");
   const [days, setDays] = useState("");
+  const addPlant = usePlantStore((state) => state.addPlant);
   const router = useRouter();
 
   const handleAddPlant = () => {
@@ -47,7 +49,7 @@ function PlantlyForm() {
       );
     }
 
-    console.log("Adding plant", name, days);
+    addPlant(name, Number(days));
     setName("");
     setDays("");
     router.replace("/");

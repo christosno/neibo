@@ -6,6 +6,8 @@ export const theme = {
     limeGreen: "#d0e57e",
     lightGray: "#eee",
     white: "#fff",
+    black: "#000",
+    grey: "#808080",
   },
   fontSizes: {
     small: 12,

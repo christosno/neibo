@@ -1,10 +1,40 @@
+import { PlantCard } from "@/components/PlantCard";
+import { usePlantStore } from "@/store/plantsStore";
+import { theme } from "@/theme";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { PlantlyButton } from "@/components/PlantlyButton";
+import { useRouter } from "expo-router";
 
 export default function App() {
+  const plants = usePlantStore((state) => state.plants);
+  const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <FlatList
+        data={plants}
+        renderItem={({ item }) => <PlantCard plant={item} />}
+        contentContainerStyle={{ paddingVertical: theme.spacing.xLarge }}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: theme.spacing.medium }} />
+        )}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              gap: theme.spacing.large,
+            }}
+          >
+            <Text>No plants found</Text>
+            <PlantlyButton
+              title="Add Plant"
+              onPress={() => router.push("/new")}
+            />
+          </View>
+        )}
+      />
       <StatusBar style="auto" />
     </View>
   );
