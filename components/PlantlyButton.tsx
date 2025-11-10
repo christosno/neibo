@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
   },
   button: {
     paddingHorizontal: 18,
