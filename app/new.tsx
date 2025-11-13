@@ -37,6 +37,10 @@ export default function NewScreen() {
       contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="handled"
       extraScrollHeight={100}
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
+      extraHeight={100}
+      keyboardOpeningTime={0}
     >
       <TouchableOpacity
         style={{ alignItems: "center", paddingBottom: theme.spacing.large }}
