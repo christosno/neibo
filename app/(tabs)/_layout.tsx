@@ -2,6 +2,7 @@ import { Redirect, SplashScreen, Tabs } from "expo-router";
 import { Feather, Entypo } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { useUserStore } from "@/store/userStore";
+
 export default function Layout() {
   SplashScreen.hideAsync();
   const hasFinishedOnboarding = useUserStore(

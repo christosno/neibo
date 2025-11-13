@@ -3,6 +3,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { Link, Stack } from "expo-router";
 import { theme } from "@/theme";
 
+export const unstable_settings = {
+  initialRouteName: "index",
+};
+
 export default function Layout() {
   return (
     <Stack>
