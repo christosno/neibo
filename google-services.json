@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "277605112432",
+    "project_id": "neibo-c998d",
+    "storage_bucket": "neibo-c998d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277605112432:android:1ddbffbea609add4d872b5",
+        "android_client_info": {
+          "package_name": "com.cnounis.neibo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277605112432-hsgid4pj3f9hig7ljvrb8epia5r3quj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cnounis.neibo",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "277605112432-n3vgqbcg66f330geis23a74d2tdgc26e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_zyxpC_TBDBNLyxEUfM49Kv5Xd5sure8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277605112432-n3vgqbcg66f330geis23a74d2tdgc26e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277605112432-gse897jt490ln3asfo53i5o2ng5t76dv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cnounis.neibo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
