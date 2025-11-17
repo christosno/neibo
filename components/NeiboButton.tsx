@@ -7,7 +7,7 @@ type Props = {
   onPress: () => void;
 };
 
-export function PlantlyButton({ title, onPress }: Props) {
+export function NeiboButton({ title, onPress }: Props) {
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
@@ -43,3 +43,4 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.leafyGreen,
   },
 });
+

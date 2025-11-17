@@ -1,13 +1,13 @@
 import { View, StyleSheet } from "react-native";
 import { theme } from "@/theme";
 import { useUserStore } from "@/store/userStore";
-import { PlantlyButton } from "@/components/PlantlyButton";
+import { NeiboButton } from "@/components/NeiboButton";
 
 export default function ProfileScreen() {
   const toggleOnboarding = useUserStore((state) => state.toggleOnboarding);
   return (
     <View style={styles.container}>
-      <PlantlyButton title="Logout" onPress={toggleOnboarding} />
+      <NeiboButton title="Logout" onPress={toggleOnboarding} />
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import { Image, useWindowDimensions } from "react-native";
 
-export function PlantlyImage({
+export function NeiboImage({
   size,
   imageUri,
 }: {
@@ -12,7 +12,7 @@ export function PlantlyImage({
   const imageSize = size || width / 1.5;
   return (
     <Image
-      source={imageUri ? { uri: imageUri } : require("@/assets/plantly.png")}
+      source={imageUri ? { uri: imageUri } : require("@/assets/neibo.png")}
       style={{
         width: imageSize,
         height: imageSize,
@@ -21,3 +21,4 @@ export function PlantlyImage({
     />
   );
 }
+

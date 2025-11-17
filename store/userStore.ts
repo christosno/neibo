@@ -17,7 +17,7 @@ export const useUserStore = create(
         })),
     }),
     {
-      name: "plantly-user-stor",
+      name: "neibo-user-store",
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

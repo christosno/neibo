@@ -6,9 +6,9 @@ import {
   Platform,
 } from "react-native";
 import { theme } from "@/theme";
-import { PlantlyImage } from "@/components/PlantlyImage";
+import { NeiboImage } from "@/components/NeiboImage";
 import { FormInput } from "@/components/FormInput";
-import { PlantlyButton } from "@/components/PlantlyButton";
+import { NeiboButton } from "@/components/NeiboButton";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -47,14 +47,14 @@ export default function NewScreen() {
         activeOpacity={0.8}
         onPress={handleImagePress}
       >
-        <PlantlyImage imageUri={image} />
+        <NeiboImage imageUri={image} />
       </TouchableOpacity>
-      <PlantlyForm imageUri={image} />
+      <NeiboForm imageUri={image} />
     </KeyboardAwareScrollView>
   );
 }
 
-function PlantlyForm({ imageUri }: { imageUri?: string }) {
+function NeiboForm({ imageUri }: { imageUri?: string }) {
   const [name, setName] = useState("");
   const [days, setDays] = useState("");
   const addPlant = usePlantStore((state) => state.addPlant);
@@ -103,7 +103,7 @@ function PlantlyForm({ imageUri }: { imageUri?: string }) {
           keyboardType="number-pad"
         />
       </View>
-      <PlantlyButton title="Add Plant" onPress={handleAddPlant} />
+      <NeiboButton title="Add Plant" onPress={handleAddPlant} />
     </View>
   );
 }

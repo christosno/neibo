@@ -3,7 +3,7 @@ import { usePlantStore } from "@/store/plantsStore";
 import { theme } from "@/theme";
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { PlantlyButton } from "@/components/PlantlyButton";
+import { NeiboButton } from "@/components/NeiboButton";
 import { useRouter } from "expo-router";
 
 export default function App() {
@@ -28,7 +28,7 @@ export default function App() {
             }}
           >
             <Text>No plants found</Text>
-            <PlantlyButton
+            <NeiboButton
               title="Add Plant"
               onPress={() => router.push("/new")}
             />

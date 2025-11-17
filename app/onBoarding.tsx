@@ -2,9 +2,9 @@ import { StyleSheet, StatusBar, Text } from "react-native";
 import { theme } from "@/theme";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
-import { PlantlyButton } from "@/components/PlantlyButton";
+import { NeiboButton } from "@/components/NeiboButton";
 import { LinearGradient } from "expo-linear-gradient";
-import { PlantlyImage } from "@/components/PlantlyImage";
+import { NeiboImage } from "@/components/NeiboImage";
 
 export default function OnboardingScreen() {
   const toggleOnboarding = useUserStore((state) => state.toggleOnboarding);
@@ -21,10 +21,10 @@ export default function OnboardingScreen() {
       style={styles.container}
     >
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Plantly</Text>
+      <Text style={styles.title}>Neibo</Text>
       <Text style={styles.subtitle}>Keep your plants healthy and happy</Text>
-      <PlantlyImage />
-      <PlantlyButton
+      <NeiboImage />
+      <NeiboButton
         title="Finish Onboarding"
         onPress={() => {
           toggleOnboarding();

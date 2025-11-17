@@ -101,7 +101,7 @@ export const usePlantStore = create(
       },
     }),
     {
-      name: "plantly-plants-store",
+      name: "neibo-plants-store",
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

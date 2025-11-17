@@ -2,10 +2,10 @@ import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { usePlantStore } from "@/store/plantsStore";
 import { differenceInCalendarDays, format } from "date-fns";
-import { PlantlyButton } from "@/components/PlantlyButton";
+import { NeiboButton } from "@/components/NeiboButton";
 import { theme } from "@/theme";
 import { useEffect } from "react";
-import { PlantlyImage } from "@/components/PlantlyImage";
+import { NeiboImage } from "@/components/NeiboImage";
 
 const fullDateFormat = "LLL d yyyy, h:mm aaa";
 
@@ -76,7 +76,7 @@ export default function PlantDetails() {
   return (
     <View style={styles.detailsContainer}>
       <View style={{ alignItems: "center" }}>
-        <PlantlyImage imageUri={plant.imageUri} />
+        <NeiboImage imageUri={plant.imageUri} />
         <View style={styles.spacer} />
         <Text style={styles.key}>Water me every</Text>
         <Text style={styles.value}>{plant.wateringFrequencyDays} days</Text>
@@ -93,7 +93,7 @@ export default function PlantDetails() {
             : "N/A"}
         </Text>
       </View>
-      <PlantlyButton title="Water me!" onPress={handleWaterPlant} />
+      <NeiboButton title="Water me!" onPress={handleWaterPlant} />
       <Pressable style={styles.deleteButton} onPress={handleDeletePlant}>
         <Text style={styles.deleteButtonText}>Delete</Text>
       </Pressable>
