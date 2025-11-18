@@ -1,13 +1,10 @@
 export const theme = {
   colors: {
-    green: "#29b365",
-    leafyGreen: "#206a42",
-    appleGreen: "#a0d36c",
-    limeGreen: "#d0e57e",
-    lightGray: "#eee",
     white: "#fff",
     black: "#000",
-    grey: "#808080",
+    greyDark: "#030712",
+    yellow: "#fde047",
+    yellowLight: "#fef9c3",
   },
   fontSizes: {
     small: 12,
@@ -17,7 +14,7 @@ export const theme = {
   },
   fontWeights: {
     normal: "400",
-    bold: "700",
+    bold: "800",
   },
   fonts: {
     main: "System",

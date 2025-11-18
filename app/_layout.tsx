@@ -18,7 +18,7 @@ export default function Layout() {
   if (initializing) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={theme.colors.green} />
+        <ActivityIndicator size="large" color={theme.colors.white} />
       </View>
     );
   }
@@ -29,7 +29,7 @@ export default function Layout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack.Protected>
       <Stack.Protected guard={!user}>
-        <Stack.Screen name="login" />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
   );
