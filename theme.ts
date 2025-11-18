@@ -32,4 +32,35 @@ export const theme = {
   fontFamily: {
     caveat: "Caveat_400Regular",
   },
+  shadows: {
+    card: "",
+    bottomSheet: "",
+    toast: "",
+    input: "",
+  },
+  border: {
+    width: {
+      small: 1,
+      medium: 2,
+      large: 5,
+    },
+    radius: {
+      xxsmall: 1,
+      xsmall: 3,
+      small: 5,
+      medium: 10,
+      large: 15,
+      xlarge: 20,
+      xxlarge: 30,
+    },
+  },
 };
+
+export type UIThemeColor = keyof typeof theme.colors;
+export type UIThemeFontSize = keyof typeof theme.fontSizes;
+export type UIThemeFontWeight = keyof typeof theme.fontWeights;
+export type UIThemeSpacing = keyof typeof theme.spacing;
+export type UIThemeShadow = keyof typeof theme.shadows;
+export type UIThemeBorderWidth = keyof typeof theme.border.width;
+export type UIThemeBorderRadius = keyof typeof theme.border.radius;
+export type UIThemeBorder = `${UIThemeColor}.${UIThemeBorderWidth}`;
