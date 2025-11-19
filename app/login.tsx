@@ -18,7 +18,6 @@ export default function Login() {
 
 function WelcomeText() {
   return (
-    //  TODO: Create UIText
     <>
       <Text
         style={{
@@ -30,7 +29,6 @@ function WelcomeText() {
       </Text>
       <Text
         style={{
-          color: theme.colors.yellowLight,
           textAlign: "center",
           fontSize: theme.fontSizes.medium,
           paddingBottom: theme.spacing.large,

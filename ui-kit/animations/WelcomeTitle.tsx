@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { theme } from "@/theme";
 
 export function WelcomeTitle({ children }: { children: ReactNode }) {
   return (
@@ -41,6 +42,7 @@ export function WelcomeTitle({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   maskedView: {
+    marginTop: theme.spacing.medium,
     flex: 1,
     flexDirection: "row",
     height: "100%",

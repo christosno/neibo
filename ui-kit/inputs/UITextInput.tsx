@@ -30,7 +30,7 @@ export function UITextInput(props: UITextInputProps) {
 const styles = StyleSheet.create({
   input: {
     marginVertical: 4,
-    height: 40,
+    height: 42,
     width: "100%",
     borderWidth: 2,
     borderRadius: theme.border.radius.xlarge,
