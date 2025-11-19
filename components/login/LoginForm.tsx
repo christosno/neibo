@@ -1,6 +1,6 @@
 import { useAuth } from "@/authentication/useAuth";
 import { theme } from "@/theme";
-import { UITextField } from "@/ui-kit/inputs/UITextField";
+import { UITextInput } from "@/ui-kit/inputs/UITextInput";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { useState } from "react";
 import { StyleSheet, Button } from "react-native";
@@ -17,14 +17,14 @@ export function LoginForm() {
       enableOnAndroid={true}
       extraScrollHeight={100}
     >
-      <UITextField
+      <UITextInput
         placeholder="Email"
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
       />
       <UIVerticalSpacer height={theme.spacing.medium} />
-      <UITextField
+      <UITextInput
         placeholder="Password"
         keyboardType="visible-password"
         value={password}

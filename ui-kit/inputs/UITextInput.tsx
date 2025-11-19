@@ -2,13 +2,13 @@ import { theme } from "@/theme";
 import { ComponentProps, useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 
-type UITextFieldProps = ComponentProps<typeof TextInput> & {
+type UITextInputProps = ComponentProps<typeof TextInput> & {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
 };
 
-export function UITextField(props: UITextFieldProps) {
+export function UITextInput(props: UITextInputProps) {
   const { placeholder, value, onChangeText, ...rest } = props;
   const [isFocused, setIsFocused] = useState(false);
   return (

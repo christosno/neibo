@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import MaskedView from "@react-native-masked-view/masked-view";
 
@@ -17,14 +17,7 @@ export function WelcomeTitle({ children }: { children: ReactNode }) {
             alignItems: "center",
           }}
         >
-          <Text
-            style={{
-              fontSize: 35,
-              fontWeight: "bold",
-            }}
-          >
-            {children}
-          </Text>
+          {children}
         </View>
       }
     >

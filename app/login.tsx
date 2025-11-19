@@ -8,8 +8,9 @@ import { theme } from "@/theme";
 export default function Login() {
   return (
     <UIView expanded color="greyDark">
-      <WelcomeTitle>Welcome to Neibo</WelcomeTitle>
-      <WelcomeText />
+      <WelcomeTitle>
+        <WelcomeText />
+      </WelcomeTitle>
       <LoginForm />
     </UIView>
   );
@@ -18,16 +19,26 @@ export default function Login() {
 function WelcomeText() {
   return (
     //  TODO: Create UIText
-    <Text
-      style={{
-        color: theme.colors.yellowLight,
-        textAlign: "center",
-        fontSize: theme.fontSizes.medium,
-        paddingBottom: theme.spacing.large,
-        paddingHorizontal: theme.spacing.large,
-      }}
-    >
-      Please login to continue
-    </Text>
+    <>
+      <Text
+        style={{
+          fontSize: 35,
+          fontWeight: "bold",
+        }}
+      >
+        Welcome to Neibo
+      </Text>
+      <Text
+        style={{
+          color: theme.colors.yellowLight,
+          textAlign: "center",
+          fontSize: theme.fontSizes.medium,
+          paddingBottom: theme.spacing.large,
+          paddingHorizontal: theme.spacing.large,
+        }}
+      >
+        Please login to continue
+      </Text>
+    </>
   );
 }
