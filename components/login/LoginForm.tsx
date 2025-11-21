@@ -20,7 +20,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [shouldSignUp, setShouldSignUp] = useState(false);
 
-  const { login, signUp, isLoading } = useAuth();
+  const { login, isLoading } = useAuth();
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={styles.scrollContent}
@@ -72,7 +72,7 @@ export function LoginForm() {
           <UIButton
             isLoading={isLoading}
             variant="outlined"
-            onPress={() => signUp(email, password)}
+            onPress={() => login(email, password)}
           >
             Sign Up
           </UIButton>

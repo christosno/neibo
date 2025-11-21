@@ -15,8 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cnounis.neibo",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "com.cnounis.neibo"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +25,6 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.cnounis.neibo",
-      "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
@@ -50,9 +48,7 @@
             "useFrameworks": "static"
           }
         }
-      ],
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      ]
     ]
   }
 }
