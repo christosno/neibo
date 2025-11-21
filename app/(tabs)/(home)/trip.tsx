@@ -1,10 +1,10 @@
 import { theme } from "@/theme";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function App() {
+export default function Trip() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>Trip</Text>
     </View>
   );
 }
@@ -18,3 +18,4 @@ const styles = StyleSheet.create({
     padding: theme.spacing.medium,
   },
 });
+
