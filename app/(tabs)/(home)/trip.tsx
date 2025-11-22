@@ -1,22 +1,16 @@
 import { UIText } from "@/ui-kit/typography/UIText";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { AppleMaps } from "expo-maps";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
-import type { Coordinates } from "expo-maps/build/shared.types";
 import type { AppleMapsViewType } from "expo-maps/build/apple/AppleMaps.types";
 import { useGetCurrentPosition, useTripSimulation } from "@/hooks";
 import { defaultCameraPosition } from "@/constants";
-
-type TripPoint = {
-  id: string;
-  coordinates: Coordinates;
-  title?: string;
-};
+import { useMarkers, useTripPoints } from "@/hooks/useTripPoints";
 
 export default function Trip() {
-  const [tripPoints, setTripPoints] = useState<TripPoint[]>([]);
   const mapRef = useRef<AppleMapsViewType | null>(null);
+  const { tripPoints, handleMapClick, clearTripPoints } = useTripPoints();
 
   const {
     isSimulating,
@@ -40,6 +34,11 @@ export default function Trip() {
   });
 
   const { location, isLoading, error } = useGetCurrentPosition();
+  const { allMarkers, polyline } = useMarkers({
+    tripPoints,
+    isSimulating,
+    simulationPosition,
+  });
 
   const cameraPosition = location
     ? {
@@ -51,54 +50,11 @@ export default function Trip() {
       }
     : defaultCameraPosition;
 
-  const handleMapClick = (event: { coordinates: Coordinates }) => {
-    const newPoint: TripPoint = {
-      id: `point-${Date.now()}`,
-      coordinates: event.coordinates,
-      title: `Point ${tripPoints.length + 1}`,
-    };
-    setTripPoints([...tripPoints, newPoint]);
-  };
-
   // Clear all trip points
   const clearTrip = () => {
-    setTripPoints([]);
+    clearTripPoints();
     resetSimulation();
   };
-
-  // Convert trip points to markers
-  const markers = tripPoints.map((point) => ({
-    id: point.id,
-    coordinates: point.coordinates,
-    title: point.title,
-  }));
-
-  // Add simulation marker (walker) if simulating
-  const allMarkers =
-    isSimulating && simulationPosition
-      ? [
-          ...markers,
-          {
-            id: "walker",
-            coordinates: simulationPosition,
-            title: "You are here",
-            tintColor: "#FF0000", // Red marker for walker
-          },
-        ]
-      : markers;
-
-  // Create polyline from trip points
-  const polyline =
-    tripPoints.length > 1
-      ? [
-          {
-            id: "trip-route",
-            coordinates: tripPoints.map((point) => point.coordinates),
-            color: "#007AFF",
-            width: 4,
-          },
-        ]
-      : [];
 
   if (isLoading) {
     return (
