@@ -1,9 +1,11 @@
 import React from "react";
 import { Stack } from "expo-router";
 import { useAuth } from "@/authentication/useAuth";
+import { useRequestLocationPermissions } from "@/hooks";
 
 export default function Layout() {
   const user = useAuth((state) => state.user);
+  useRequestLocationPermissions();
   return (
     <Stack>
       <Stack.Protected guard={!!user}>
