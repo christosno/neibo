@@ -9,7 +9,6 @@ export default function Layout() {
   const user = useAuth((state) => {
     return state.user;
   });
-  console.log("🚀 ~ Layout ~ user:", user);
   useRequestLocationPermissions();
   return (
     <QueryClientProvider client={queryClient}>

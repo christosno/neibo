@@ -3,7 +3,7 @@ import { theme } from "@/theme";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { UITextInput } from "@/ui-kit/inputs/UITextInput";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { UIText } from "../../ui-kit/typography/UIText";
@@ -25,14 +25,8 @@ export function LoginForm() {
     formState: { errors },
     clearErrors,
   } = useLoginForm(isSignUp);
-  console.log("🚀 ~ LoginForm ~ errors:", errors);
 
   const { login, signUp, isLoading } = useAuth();
-
-  // Clear errors when switching between login and sign up
-  useEffect(() => {
-    clearErrors();
-  }, [isSignUp, clearErrors]);
 
   const onSubmit = (data: LoginFormData) => {
     if (isSignUp) signUp(data.email, data.password, data.username || "");
@@ -119,12 +113,19 @@ export function LoginForm() {
           )}
         </>
       ) : null}
+
       {!isSignUp && (
         <LoginButtonContainer signUp={false}>
           <UIText color="white">
             <UIText>
               Please Login to continue.If you don not have an account please{" "}
-              <UIText onPress={() => setIsSignUp(true)} color="yellow">
+              <UIText
+                onPress={() => {
+                  setIsSignUp(true);
+                  clearErrors();
+                }}
+                color="yellow"
+              >
                 Sign Up
               </UIText>
             </UIText>
@@ -143,7 +144,13 @@ export function LoginForm() {
           <UIText color="white">
             <UIText>
               Please Sign Up. If you already have an account please{" "}
-              <UIText onPress={() => setIsSignUp(false)} color="yellow">
+              <UIText
+                onPress={() => {
+                  setIsSignUp(false);
+                  clearErrors();
+                }}
+                color="yellow"
+              >
                 Login
               </UIText>
             </UIText>
