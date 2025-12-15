@@ -5,6 +5,7 @@ type Auth = {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => void;
+  signUp: (email: string, password: string, username: string) => void;
   logout: () => void;
 };
 
@@ -16,7 +17,9 @@ export const useAuth = create<Auth>((set) => ({
   login: (email: string, password: string) => {
     set({ user: email });
   },
-
+  signUp: (email: string, password: string, username: string) => {
+    set({ user: email });
+  },
   logout: () => {
     set({ user: null });
   },

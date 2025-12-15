@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 import { WelcomeTitle } from "@/ui-kit/animations/WelcomeTitle";
-import { LoginForm } from "@/components/login/LoginForm";
+import { LoginForm } from "@/features/userAuth/LoginForm";
 import { UIView } from "@/ui-kit/layout/UIView";
 import { theme } from "@/theme";
 

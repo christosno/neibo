@@ -6,7 +6,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function Layout() {
   const queryClient = new QueryClient();
-  const user = useAuth((state) => state.user);
+  const user = useAuth((state) => {
+    return state.user;
+  });
+  console.log("🚀 ~ Layout ~ user:", user);
   useRequestLocationPermissions();
   return (
     <QueryClientProvider client={queryClient}>

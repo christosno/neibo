@@ -5,6 +5,7 @@ export const theme = {
     greyDark: "#030712",
     yellow: "#fde047",
     yellowLight: "#fef9c3",
+    error: "#ef4444",
   },
   fontSizes: {
     small: 12,
