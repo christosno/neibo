@@ -1,27 +1,226 @@
-import { theme } from "@/theme";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
-import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { UIView } from "@/ui-kit/layout/UIView";
+import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
+import { UITextInput } from "@/ui-kit/inputs/UITextInput";
+import { UISelect } from "@/ui-kit/inputs/UISelect";
+import { UIText } from "@/ui-kit/typography/UIText";
+import { Controller } from "react-hook-form";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { StyleSheet } from "react-native";
+import { theme } from "@/theme";
+import { useTourForm, TOUR_THEMES, TourFormData } from "./useTourForm";
+import { useGenerateTourWithAi } from "@/hooks/generate-tour-with-ai/useGenerateTourWithAi";
 
 export default function Home() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useTourForm();
+
+  const { generateTour, data, error, isPending } = useGenerateTourWithAi();
+  console.log("👉 ~ Home ~ isPending:", isPending);
+  console.log("👉 ~ Home ~ error:", error);
+  console.log("👉 ~ Home ~ data:", data);
+
+  const onSubmit = (formData: TourFormData) => {
+    console.log("Form submitted:", formData);
+    generateTour(formData);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-      <Link href="/(tabs)/(home)/trip" asChild>
-        <UIButton variant="outlined" extended onPress={() => {}}>
-          Go to Trip Screen
-        </UIButton>
-      </Link>
-    </View>
+    <UIView expanded color="slateDark">
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollContent}
+        enableOnAndroid={true}
+        extraScrollHeight={100}
+      >
+        <UIView paddingHorizontal="large" paddingTop="large">
+          <UIText size={theme.fontSizes.large} align="left" color="yellow">
+            Create Your Tour
+          </UIText>
+          <UIVerticalSpacer height={theme.spacing.large} />
+
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            City *
+          </UIText>
+          <Controller
+            control={control}
+            name="city"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <UITextInput
+                placeholder="City"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
+            )}
+          />
+          {errors.city && (
+            <UIText
+              size={theme.fontSizes.small}
+              style={{ paddingLeft: theme.spacing.small }}
+              align="left"
+              color="error"
+            >
+              {errors.city.message}
+            </UIText>
+          )}
+          <UIVerticalSpacer height={theme.spacing.medium} />
+
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            Neighborhood
+          </UIText>
+          <Controller
+            control={control}
+            name="neighborhood"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <UITextInput
+                placeholder="Neighborhood"
+                value={value || ""}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
+            )}
+          />
+          <UIVerticalSpacer height={theme.spacing.medium} />
+
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            Tour Duration
+          </UIText>
+          <Controller
+            control={control}
+            name="duration"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <UITextInput
+                placeholder={"Duration in minutes"}
+                value={value?.toString() || ""}
+                onChangeText={(text) => {
+                  const numValue = Number(text);
+                  onChange(isNaN(numValue) ? 0 : numValue);
+                }}
+                onBlur={onBlur}
+              />
+            )}
+          />
+          {errors.duration && (
+            <UIText
+              size={theme.fontSizes.small}
+              style={{ paddingLeft: theme.spacing.small }}
+              align="left"
+              color="error"
+            >
+              {errors.duration.message}
+            </UIText>
+          )}
+          <UIVerticalSpacer height={theme.spacing.medium} />
+
+          {/* Tour Theme */}
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            Tour Theme / Style *
+          </UIText>
+          <Controller
+            control={control}
+            name="tourTheme"
+            render={({ field: { onChange, value } }) => (
+              <UISelect
+                placeholder="Tour Theme / Style *"
+                value={value}
+                onChange={onChange}
+                options={TOUR_THEMES.map((theme) => ({
+                  label: theme,
+                  value: theme,
+                }))}
+                error={errors.tourTheme?.message}
+              />
+            )}
+          />
+          <UIVerticalSpacer height={theme.spacing.medium} />
+
+          {/* Start Location */}
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            Start Location
+          </UIText>
+          <Controller
+            control={control}
+            name="startLocation"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <UITextInput
+                placeholder="Start Location (optional, e.g., Plaça de Catalunya)"
+                value={value || ""}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
+            )}
+          />
+          <UIVerticalSpacer height={theme.spacing.medium} />
+
+          {/* Language */}
+          <UIText
+            size={theme.fontSizes.small}
+            align="left"
+            color="yellow"
+            style={{ marginBottom: theme.spacing.tiny }}
+          >
+            Language
+          </UIText>
+          <Controller
+            control={control}
+            name="language"
+            render={({ field: { onChange, value, onBlur } }) => (
+              <UITextInput
+                placeholder="Language (optional, e.g., English)"
+                value={value || ""}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
+            )}
+          />
+          <UIVerticalSpacer height={theme.spacing.xLarge} />
+
+          {/* Submit Button */}
+          <UIButton
+            isLoading={isPending}
+            variant="outlined"
+            extended
+            onPress={handleSubmit(onSubmit)}
+          >
+            Generate Tour
+          </UIButton>
+          <UIVerticalSpacer height={theme.spacing.large} />
+        </UIView>
+      </KeyboardAwareScrollView>
+    </UIView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: theme.spacing.medium,
+  scrollContent: {
+    flexGrow: 1,
   },
 });

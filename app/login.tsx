@@ -7,7 +7,7 @@ import { theme } from "@/theme";
 
 export default function Login() {
   return (
-    <UIView expanded color="greyDark">
+    <UIView expanded color="slateDark">
       <WelcomeTitle>
         <WelcomeText />
       </WelcomeTitle>

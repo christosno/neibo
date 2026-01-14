@@ -27,9 +27,9 @@ export function UIButtonContainer({
   const [isPressed, setIsPressed] = useState(false);
 
   const bgColor: UIThemeColor = (() => {
-    if (disabled) return "greyDark";
+    if (disabled) return "slateDark";
     if (isPressed) return variant === "outlined" ? "yellow" : "yellow";
-    return variant === "outlined" ? "greyDark" : "yellow";
+    return variant === "outlined" ? "slateDark" : "yellow";
   })();
 
   return (

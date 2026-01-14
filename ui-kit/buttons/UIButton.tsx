@@ -60,7 +60,7 @@ export function UIButton(props: Props) {
 }
 
 const getColor = (variant: Variant, disabled: boolean): UIThemeColor => {
-  if (disabled) return "greyDark";
+  if (disabled) return "slateDark";
 
   if (variant === "filled") return "white";
 

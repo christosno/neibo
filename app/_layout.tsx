@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { useAuth } from "@/authentication/useAuth";
 import { useRequestLocationPermissions } from "@/hooks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { defaultScreenOptions } from "@/constants/navigationOptions";
 
 export default function Layout() {
   const queryClient = new QueryClient();
@@ -12,7 +13,7 @@ export default function Layout() {
   useRequestLocationPermissions();
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack>
+      <Stack screenOptions={defaultScreenOptions}>
         <Stack.Protected guard={!!user}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>

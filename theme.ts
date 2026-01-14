@@ -2,7 +2,9 @@ export const theme = {
   colors: {
     white: "#fff",
     black: "#000",
-    greyDark: "#030712",
+    slateLight: "#94a3b8",
+    slate: "#1e293b",
+    slateDark: "#0f172a",
     yellow: "#fde047",
     yellowLight: "#fef9c3",
     error: "#ef4444",

@@ -60,7 +60,7 @@ function Dot({
       size={4}
       border="white.small"
       circle
-      color="greyDark"
+      color="slateDark"
       style={dotStyle}
     />
   );
