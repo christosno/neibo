@@ -17,6 +17,7 @@ export default function Home() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useTourForm();
 
@@ -26,6 +27,7 @@ export default function Home() {
     console.log("Form submitted:", formData);
     try {
       await generateTour(formData);
+      reset();
       router.push("/trip");
     } catch (error) {
       console.log("👉 ~ onSubmit ~ error:", error);
