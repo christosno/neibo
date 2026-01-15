@@ -2,11 +2,12 @@ import React, { createContext, ReactNode, useContext, useMemo } from "react";
 import { StyleProp, Text, TextProps, TextStyle } from "react-native";
 import Animated, {
   AnimatedProps,
+  AnimatedStyle,
   FadeIn,
   FadeOut,
 } from "react-native-reanimated";
 import { BEZIER_EASING, BEZIER_TIMING_FN } from "../animations/BEZIER_EASING";
-import { theme, UIThemeColor } from "@/theme";
+import { theme, UIThemeColor, UIThemeFontSize } from "@/theme";
 
 type UIAnimatedTextStyle = AnimatedProps<TextProps>["style"];
 type UITextStyle = StyleProp<TextStyle>;
@@ -17,7 +18,7 @@ type Transform = "uppercase" | "lowercase" | "capitalize" | "none";
 
 type Props = {
   color?: UIThemeColor;
-  size?: number;
+  size?: UIThemeFontSize;
   font?: string;
   lineHeight?: number;
   selectable?: boolean;
@@ -41,7 +42,7 @@ export function UIText(props: Props) {
   const finalProps = parentProps ? { ...parentProps, ...props } : props;
 
   const {
-    size = 16,
+    size = "medium",
     color = "black",
     align: textAlign = "center",
     style,
@@ -60,7 +61,7 @@ export function UIText(props: Props) {
     {
       color: theme.colors[color],
       textAlign: textAlign ?? "center",
-      fontSize: size,
+      fontSize: theme.fontSizes[size],
       textTransform,
       flex: expanded ? 1 : 0,
     },
@@ -74,7 +75,7 @@ export function UIText(props: Props) {
       <Text
         {...rnTruncProps}
         testID={testID}
-        style={finalStyles}
+        style={finalStyles as StyleProp<TextStyle>}
         selectable={selectable}
         numberOfLines={numberOfLines}
         onTextLayout={onTextLayout}
@@ -99,7 +100,7 @@ function AnimatedText(
   const finalProps = parentProps ? { ...parentProps, ...props } : props;
 
   const {
-    size = 16,
+    size = "medium",
     color = "black",
     align: textAlign = "center",
     style,
@@ -121,7 +122,7 @@ function AnimatedText(
     {
       color: theme.colors[color],
       textAlign,
-      fontSize: size,
+      fontSize: theme.fontSizes[size],
       textTransform,
       flex: expanded ? 1 : 0,
       transitionProperty: transitionColor ? "color" : undefined,
@@ -142,7 +143,7 @@ function AnimatedText(
           exiting={fadeOnTextChange ? FadeOut.easing(BEZIER_EASING) : undefined}
           key={fadeOnTextChange ? children?.toString() : undefined}
           testID={testID}
-          style={finalStyles}
+          style={finalStyles as StyleProp<AnimatedStyle<TextStyle>>}
           selectable={selectable}
           numberOfLines={numberOfLines}
           onTextLayout={onTextLayout}

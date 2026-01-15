@@ -89,9 +89,7 @@ type OptionalAxiosConfig = Partial<
 const getRequestFunction =
   (axiosInstance: AxiosInstance) =>
   async <T>(options: Options<T>) => {
-    console.log("🚀🚀🚀🚀🚀🚀🚀🚀 ~ getRequestFunction ~ options:", options);
     const response = await axiosInstance.request(options);
-    console.log("🚀🚀🚀🚀🚀🚀🚀🚀 ~ getRequestFunction ~ response:", response);
     return validateResponse(response.data, options);
   };
 

@@ -1,6 +1,7 @@
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { UIView } from "@/ui-kit/layout/UIView";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
+import { Notification } from "@/ui-kit/feedback/Notification";
 import { UITextInput } from "@/ui-kit/inputs/UITextInput";
 import { UISelect } from "@/ui-kit/inputs/UISelect";
 import { UIText } from "@/ui-kit/typography/UIText";
@@ -10,6 +11,7 @@ import { StyleSheet } from "react-native";
 import { theme } from "@/theme";
 import { useTourForm, TOUR_THEMES, TourFormData } from "./useTourForm";
 import { useGenerateTourWithAi } from "@/hooks/generate-tour-with-ai/useGenerateTourWithAi";
+import { router } from "expo-router";
 
 export default function Home() {
   const {
@@ -18,14 +20,16 @@ export default function Home() {
     formState: { errors },
   } = useTourForm();
 
-  const { generateTour, data, error, isPending } = useGenerateTourWithAi();
-  console.log("👉 ~ Home ~ isPending:", isPending);
-  console.log("👉 ~ Home ~ error:", error);
-  console.log("👉 ~ Home ~ data:", data);
+  const { generateTour, error, isPending } = useGenerateTourWithAi();
 
-  const onSubmit = (formData: TourFormData) => {
+  const onSubmit = async (formData: TourFormData) => {
     console.log("Form submitted:", formData);
-    generateTour(formData);
+    try {
+      await generateTour(formData);
+      router.push("/trip");
+    } catch (error) {
+      console.log("👉 ~ onSubmit ~ error:", error);
+    }
   };
 
   return (
@@ -36,13 +40,13 @@ export default function Home() {
         extraScrollHeight={100}
       >
         <UIView paddingHorizontal="large" paddingTop="large">
-          <UIText size={theme.fontSizes.large} align="left" color="yellow">
+          <UIText size="large" align="left" color="yellow">
             Create Your Tour
           </UIText>
           <UIVerticalSpacer height={theme.spacing.large} />
 
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -63,7 +67,7 @@ export default function Home() {
           />
           {errors.city && (
             <UIText
-              size={theme.fontSizes.small}
+              size="small"
               style={{ paddingLeft: theme.spacing.small }}
               align="left"
               color="error"
@@ -74,7 +78,7 @@ export default function Home() {
           <UIVerticalSpacer height={theme.spacing.medium} />
 
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -96,7 +100,7 @@ export default function Home() {
           <UIVerticalSpacer height={theme.spacing.medium} />
 
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -120,7 +124,7 @@ export default function Home() {
           />
           {errors.duration && (
             <UIText
-              size={theme.fontSizes.small}
+              size="small"
               style={{ paddingLeft: theme.spacing.small }}
               align="left"
               color="error"
@@ -132,7 +136,7 @@ export default function Home() {
 
           {/* Tour Theme */}
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -159,7 +163,7 @@ export default function Home() {
 
           {/* Start Location */}
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -182,7 +186,7 @@ export default function Home() {
 
           {/* Language */}
           <UIText
-            size={theme.fontSizes.small}
+            size="small"
             align="left"
             color="yellow"
             style={{ marginBottom: theme.spacing.tiny }}
@@ -202,6 +206,17 @@ export default function Home() {
             )}
           />
           <UIVerticalSpacer height={theme.spacing.xLarge} />
+
+          {error && (
+            <>
+              <Notification
+                title="Error"
+                message={error?.message || "An unexpected error occurred"}
+                type="error"
+              />
+              <UIVerticalSpacer height={theme.spacing.xLarge} />
+            </>
+          )}
 
           {/* Submit Button */}
           <UIButton

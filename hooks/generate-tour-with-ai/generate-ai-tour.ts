@@ -3,7 +3,6 @@ import { http } from "@/services/http/http";
 import { z } from "zod";
 
 export const generateAiTour = (body: TourFormData) => {
-  console.log("👉👉👉👉👉👉👉👉 ~ generateAiTour ~ body:", body);
   return http.basic({
     url: "/ai/create-tour",
     method: "POST",

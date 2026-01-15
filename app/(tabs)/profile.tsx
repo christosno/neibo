@@ -1,27 +1,25 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button } from "react-native";
 import { useAuth } from "@/authentication/useAuth";
+import { UIView } from "@/ui-kit/layout/UIView";
+import { UIText } from "@/ui-kit/typography/UIText";
 
 export default function Profile() {
   const { logout, user } = useAuth();
 
   return (
-    <View style={styles.container}>
-      <Text>Profile</Text>
-      <Text>{user?.email}</Text>
-      <Text>{user?.username}</Text>
-      <Text>{user?.firstName}</Text>
-      <Text>{user?.lastName}</Text>
-      <Text>{user?.createdAt}</Text>
+    <UIView
+      color="slateDark"
+      style={{ height: "100%" }}
+      mainAxis="center"
+      crossAxis="center"
+    >
+      <UIText color="slateLight">Profile</UIText>
+      <UIText color="slateLight">{user?.email}</UIText>
+      <UIText color="slateLight">{user?.username}</UIText>
+      <UIText color="slateLight">{user?.firstName}</UIText>
+      <UIText color="slateLight">{user?.lastName}</UIText>
+      <UIText color="slateLight">{user?.createdAt}</UIText>
       <Button title="Logout" onPress={logout} />
-    </View>
+    </UIView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

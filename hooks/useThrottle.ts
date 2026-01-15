@@ -5,11 +5,13 @@ export function useThrottle(
   limit: number,
   options?: { trailing: boolean }
 ): () => void;
+
 export function useThrottle<T>(
   func: (data: T) => void,
   limit: number,
   options?: { trailing: boolean }
 ): (data: T) => void;
+
 export function useThrottle<T>(
   func: (data?: T) => void,
   limit: number,
