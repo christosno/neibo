@@ -84,15 +84,34 @@ export default function Trip() {
     return calculated;
   }, [geocodedSpots]);
 
+  // Sort spots by positionOrder to ensure correct route order
+  const sortedSpots = useMemo(() => {
+    return [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
+  }, [geocodedSpots]);
+
   // Prepare markers for the map (must be before early returns)
   const markers = useMemo(() => {
-    return geocodedSpots.map((spot, index) => ({
+    return sortedSpots.map((spot, index) => ({
       key: `spot-${spot.positionOrder}-${index}`,
       coordinates: spot.coordinates,
       title: spot.title,
       subtitle: spot.description,
     }));
-  }, [geocodedSpots]);
+  }, [sortedSpots]);
+
+  // Create polyline route connecting all spots in order
+  const routePolyline = useMemo(() => {
+    if (sortedSpots.length < 2) {
+      return null;
+    }
+
+    return {
+      id: "tour-route",
+      coordinates: sortedSpots.map((spot) => spot.coordinates),
+      color: "#365314", // Orange color for the route
+      width: 2,
+    };
+  }, [sortedSpots]);
 
   const handleZoomIn = () => {
     if (!mapRef.current || !currentCameraPosition.coordinates) return;
@@ -184,23 +203,19 @@ export default function Trip() {
         style={{ flex: 1 }}
         cameraPosition={cameraPosition}
         markers={markers}
+        polylines={routePolyline ? [routePolyline] : []}
         onMarkerClick={(marker) => {
           console.log("Marker clicked:", marker);
         }}
       />
       {/* Zoom Controls */}
       <UIView style={styles.zoomControls}>
-        <Pressable
-          style={styles.zoomButton}
-          onPress={handleZoomIn}
-          android_ripple={{ color: "rgba(255, 255, 255, 0.2)" }}
-        >
+        <Pressable style={styles.zoomButton} onPress={handleZoomIn}>
           <Ionicons name="add" size={24} color="#000" />
         </Pressable>
         <Pressable
           style={[styles.zoomButton, styles.zoomButtonBottom]}
           onPress={handleZoomOut}
-          android_ripple={{ color: "rgba(255, 255, 255, 0.2)" }}
         >
           <Ionicons name="remove" size={24} color="#000" />
         </Pressable>
