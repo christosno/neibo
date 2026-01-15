@@ -14,6 +14,8 @@ import { defaultCameraPosition } from "@/constants/defaultPosition";
 import type { CameraPosition } from "expo-maps/build/shared.types";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentRef } from "react";
+import { useGetCurrentPosition } from "@/hooks/useGetCurrentPosition";
+import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermissions";
 
 /**
  * Calculate camera position to fit all markers
@@ -73,6 +75,15 @@ export default function Trip() {
   const mapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
   const [currentCameraPosition, setCurrentCameraPosition] =
     useState<CameraPosition>(defaultCameraPosition);
+  // Request location permissions
+  useRequestLocationPermissions();
+
+  // Get and watch user location
+  const { coordinates: userLocation } = useGetCurrentPosition({
+    watch: true,
+    timeInterval: 5000,
+    distanceInterval: 10,
+  });
 
   // Calculate camera position to show all markers (must be before early returns)
   const cameraPosition = useMemo(() => {
@@ -91,13 +102,25 @@ export default function Trip() {
 
   // Prepare markers for the map (must be before early returns)
   const markers = useMemo(() => {
-    return sortedSpots.map((spot, index) => ({
+    const spotMarkers = sortedSpots.map((spot, index) => ({
       key: `spot-${spot.positionOrder}-${index}`,
       coordinates: spot.coordinates,
       title: spot.title,
       subtitle: spot.description,
     }));
-  }, [sortedSpots]);
+
+    // Add user location marker if available
+    if (userLocation) {
+      spotMarkers.push({
+        key: "user-location",
+        coordinates: userLocation,
+        title: "Your Location",
+        subtitle: "You are here",
+      });
+    }
+
+    return spotMarkers;
+  }, [sortedSpots, userLocation]);
 
   // Create polyline route connecting all spots in order
   const routePolyline = useMemo(() => {
