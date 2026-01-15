@@ -4,6 +4,7 @@ import { UIView } from "@/ui-kit/layout/UIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { UIDotsLoader } from "@/ui-kit/feedback/UIDotsLoader";
+import { SpotDescriptionModal } from "@/ui-kit/feedback/SpotDescriptionModal";
 import {
   useGeocodeTourSpots,
   type GeocodedSpot,
@@ -16,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentRef } from "react";
 import { useGetCurrentPosition } from "@/hooks/useGetCurrentPosition";
 import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermissions";
+import { useProximityDetection } from "@/hooks/useProximityDetection";
 
 /**
  * Calculate camera position to fit all markers
@@ -75,6 +77,7 @@ export default function Trip() {
   const mapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
   const [currentCameraPosition, setCurrentCameraPosition] =
     useState<CameraPosition>(defaultCameraPosition);
+
   // Request location permissions
   useRequestLocationPermissions();
 
@@ -84,6 +87,13 @@ export default function Trip() {
     timeInterval: 5000,
     distanceInterval: 10,
   });
+
+  // Monitor distance to spots and show description when within 40 meters
+  const { nearbySpot, clearNearbySpot } = useProximityDetection(
+    userLocation,
+    geocodedSpots,
+    { proximityThreshold: 40 }
+  );
 
   // Calculate camera position to show all markers (must be before early returns)
   const cameraPosition = useMemo(() => {
@@ -243,6 +253,13 @@ export default function Trip() {
           <Ionicons name="remove" size={24} color="#000" />
         </Pressable>
       </UIView>
+
+      {/* Spot Description Modal */}
+      <SpotDescriptionModal
+        spot={nearbySpot}
+        visible={nearbySpot !== null}
+        onClose={clearNearbySpot}
+      />
     </UIView>
   );
 }
