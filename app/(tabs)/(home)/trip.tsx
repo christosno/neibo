@@ -9,7 +9,7 @@ import {
   useGeocodeTourSpots,
   type GeocodedSpot,
 } from "@/hooks/useGeocodeTourSpots";
-import { AppleMaps } from "expo-maps";
+import { AppleMaps, GoogleMaps } from "expo-maps";
 import { useMemo, useRef, useState } from "react";
 import { defaultCameraPosition } from "@/constants/defaultPosition";
 import type { CameraPosition } from "expo-maps/build/shared.types";
@@ -125,12 +125,11 @@ export default function Trip() {
   }, [geocodedSpots]);
 
   // Prepare markers for the map (must be before early returns)
-  const markers = useMemo(() => {
+  const appleMarkers = useMemo(() => {
     const spotMarkers = sortedSpots.map((spot, index) => ({
-      key: `spot-${spot.positionOrder}-${index}`,
+      id: `spot-${spot.positionOrder}-${index}`,
       coordinates: spot.coordinates,
       title: spot.title,
-      subtitle: spot.description,
       systemImage: "mappin.circle.fill",
       tintColor: "#365314", // Green color for tour spots
     }));
@@ -139,15 +138,33 @@ export default function Trip() {
     console.log("👉 ~ Trip ~ userLocation:", userLocation);
     if (userLocation) {
       spotMarkers.push({
-        key: "user-location",
+        id: "user-location",
         coordinates: userLocation,
         title: "Your Location",
-        subtitle: "You are here",
         systemImage: "location.circle.fill",
         tintColor: "#3b82f6", // Blue color for user location
       });
     }
 
+    return spotMarkers;
+  }, [sortedSpots, userLocation]);
+
+  const googleMarkers = useMemo(() => {
+    const spotMarkers = sortedSpots.map((spot, index) => ({
+      id: `spot-${spot.positionOrder}-${index}`,
+      coordinates: spot.coordinates,
+      title: spot.title,
+      draggable: false,
+    }));
+
+    if (userLocation) {
+      spotMarkers.push({
+        id: "user-location",
+        coordinates: userLocation,
+        title: "Your Location",
+        draggable: false,
+      });
+    }
     return spotMarkers;
   }, [sortedSpots, userLocation]);
 
@@ -201,19 +218,6 @@ export default function Trip() {
     );
   }
 
-  // iOS only - show message for other platforms
-  if (Platform.OS !== "ios") {
-    return (
-      <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
-        <Notification
-          title="Not Available"
-          message="Map view is currently only available on iOS"
-          type="info"
-        />
-      </UIView>
-    );
-  }
-
   // Loading state
   if (isLoading) {
     return (
@@ -248,13 +252,30 @@ export default function Trip() {
     );
   }
 
+  console.log("👉 ~ Trip ~ Platform.OS:", Platform.OS);
+  if (Platform.OS === "android") {
+    return (
+      <UIView expanded color="slateDark">
+        <GoogleMaps.View
+          style={{ flex: 1 }}
+          cameraPosition={cameraPosition}
+          markers={googleMarkers}
+          polylines={routePolyline ? [routePolyline] : []}
+          onMarkerClick={(marker) => {
+            console.log("Marker clicked:", marker);
+          }}
+        />
+      </UIView>
+    );
+  }
+
   return (
     <UIView expanded color="slateDark">
       <AppleMaps.View
         ref={mapRef}
         style={{ flex: 1 }}
         cameraPosition={cameraPosition}
-        markers={markers}
+        markers={appleMarkers}
         polylines={routePolyline ? [routePolyline] : []}
         onMarkerClick={(marker) => {
           console.log("Marker clicked:", marker);
