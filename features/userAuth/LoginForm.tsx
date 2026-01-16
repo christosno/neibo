@@ -4,8 +4,6 @@ import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { UITextInput } from "@/ui-kit/inputs/UITextInput";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { UIText } from "../../ui-kit/typography/UIText";
 import { UIView } from "@/ui-kit/layout/UIView";
 import {
@@ -16,7 +14,6 @@ import {
   FadeOutUp,
   FadeInUp,
 } from "react-native-reanimated";
-import { Controller } from "react-hook-form";
 import { LoginFormData, useLoginForm } from "./useLoginForm";
 
 export function LoginForm() {
@@ -36,11 +33,7 @@ export function LoginForm() {
   };
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={styles.scrollContent}
-      enableOnAndroid={true}
-      extraScrollHeight={100}
-    >
+    <UIView>
       <UITextInput
         control={control}
         name="email"
@@ -137,7 +130,7 @@ export function LoginForm() {
           </LoginButtonContainer>
         )}
       </UIView.Animated>
-    </KeyboardAwareScrollView>
+    </UIView>
   );
 }
 
@@ -159,11 +152,3 @@ function LoginButtonContainer({
     </UIView.Animated>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    paddingHorizontal: theme.spacing.large,
-  },
-});

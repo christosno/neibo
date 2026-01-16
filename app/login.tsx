@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { WelcomeTitle } from "@/ui-kit/animations/WelcomeTitle";
 import { LoginForm } from "@/features/userAuth/LoginForm";
 import { UIView } from "@/ui-kit/layout/UIView";
@@ -13,9 +13,7 @@ export default function Login() {
   return (
     <UIView.Animated linearTransition expanded color="slateDark">
       <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        contentContainerStyle={styles.scrollContent}
         enableOnAndroid={true}
         extraScrollHeight={100}
       >
@@ -73,3 +71,11 @@ function ContinueAsGuest() {
     </UIView.Animated>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: theme.spacing.large,
+  },
+});
