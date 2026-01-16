@@ -8,6 +8,7 @@ import { UIText } from "@/ui-kit/typography/UIText";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { UITextButton } from "@/ui-kit/buttons/UITextButton";
 
 export default function Login() {
   return (
@@ -65,9 +66,7 @@ function ContinueAsGuest() {
       <UIText size="medium" align="center" color="yellow">
         or
       </UIText>
-      <UIButton variant="outlined" onPress={() => {}}>
-        Continue as Guest
-      </UIButton>
+      <UITextButton onPress={() => {}}>Continue as Guest</UITextButton>
     </UIView.Animated>
   );
 }
