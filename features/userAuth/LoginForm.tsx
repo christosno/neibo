@@ -13,6 +13,8 @@ import {
   SlideOutRight,
   SlideInLeft,
   SlideOutLeft,
+  FadeOutUp,
+  FadeInUp,
 } from "react-native-reanimated";
 import { Controller } from "react-hook-form";
 import { LoginFormData, useLoginForm } from "./useLoginForm";
@@ -44,24 +46,18 @@ export function LoginForm() {
         name="email"
         render={({ field: { onChange, onBlur, value } }) => (
           <UITextInput
+            backroundColor="slateLight"
+            placeholderTextColor="slate"
             placeholder="Email"
             keyboardType="email-address"
             value={value}
             onChangeText={onChange}
+            hasError={!!errors.email}
+            errorMessage={errors.email?.message}
             onBlur={onBlur}
           />
         )}
       />
-      {errors.email && (
-        <UIText
-          size="small"
-          style={{ paddingLeft: theme.spacing.small }}
-          align="left"
-          color="error"
-        >
-          {errors.email.message}
-        </UIText>
-      )}
       <UIVerticalSpacer height={theme.spacing.medium} />
       <Controller
         control={control}
@@ -69,25 +65,23 @@ export function LoginForm() {
         render={({ field: { onChange, onBlur, value } }) => (
           <UITextInput
             placeholder="Password"
+            backroundColor="slateLight"
+            placeholderTextColor="slate"
             // secureTextEntry
             value={value}
             onChangeText={onChange}
+            hasError={!!errors.password}
+            errorMessage={errors.password?.message}
             onBlur={onBlur}
           />
         )}
       />
-      {errors.password && (
-        <UIText
-          size="small"
-          style={{ paddingLeft: theme.spacing.small }}
-          align="left"
-          color="error"
-        >
-          {errors.password.message}
-        </UIText>
-      )}
       {isSignUp ? (
-        <>
+        <UIView.Animated
+          linearTransition
+          entering={FadeInUp.duration(400)}
+          exiting={FadeOutUp.duration(300)}
+        >
           <UIVerticalSpacer height={theme.spacing.medium} />
           <Controller
             control={control}
@@ -95,75 +89,71 @@ export function LoginForm() {
             render={({ field: { onChange, onBlur, value } }) => (
               <UITextInput
                 placeholder="Username"
+                backroundColor="slateLight"
+                placeholderTextColor="slate"
                 value={value || ""}
                 onChangeText={onChange}
+                hasError={!!errors.username}
+                errorMessage={errors.username?.message}
                 onBlur={onBlur}
               />
             )}
           />
-          {errors.username && (
-            <UIText
-              size="small"
-              style={{ paddingLeft: theme.spacing.small }}
-              align="left"
-              color="error"
-            >
-              {errors.username.message}
-            </UIText>
-          )}
-        </>
+        </UIView.Animated>
       ) : null}
 
-      {!isSignUp && (
-        <LoginButtonContainer signUp={false}>
-          <UIText color="white">
-            <UIText>
-              Please Login to continue.If you don not have an account please{" "}
-              <UIText
-                onPress={() => {
-                  setIsSignUp(true);
-                  clearErrors();
-                }}
-                color="yellow"
-              >
-                Sign Up
+      <UIView.Animated linearTransition>
+        {!isSignUp && (
+          <LoginButtonContainer signUp={false}>
+            <UIText color="white">
+              <UIText>
+                Please Login to continue.If you don not have an account please{" "}
+                <UIText
+                  onPress={() => {
+                    setIsSignUp(true);
+                    clearErrors();
+                  }}
+                  color="yellow"
+                >
+                  Sign Up
+                </UIText>
               </UIText>
             </UIText>
-          </UIText>
-          <UIButton
-            isLoading={isLoading}
-            variant="outlined"
-            onPress={handleSubmit(onSubmit)}
-          >
-            Login
-          </UIButton>
-        </LoginButtonContainer>
-      )}
-      {isSignUp && (
-        <LoginButtonContainer signUp={true}>
-          <UIText color="white">
-            <UIText>
-              Please Sign Up. If you already have an account please{" "}
-              <UIText
-                onPress={() => {
-                  setIsSignUp(false);
-                  clearErrors();
-                }}
-                color="yellow"
-              >
-                Login
+            <UIButton
+              isLoading={isLoading}
+              variant="outlined"
+              onPress={handleSubmit(onSubmit)}
+            >
+              Login
+            </UIButton>
+          </LoginButtonContainer>
+        )}
+        {isSignUp && (
+          <LoginButtonContainer signUp={true}>
+            <UIText color="white">
+              <UIText>
+                Please Sign Up. If you already have an account please{" "}
+                <UIText
+                  onPress={() => {
+                    setIsSignUp(false);
+                    clearErrors();
+                  }}
+                  color="yellow"
+                >
+                  Login
+                </UIText>
               </UIText>
             </UIText>
-          </UIText>
-          <UIButton
-            isLoading={isLoading}
-            variant="outlined"
-            onPress={handleSubmit(onSubmit)}
-          >
-            Sign Up
-          </UIButton>
-        </LoginButtonContainer>
-      )}
+            <UIButton
+              isLoading={isLoading}
+              variant="outlined"
+              onPress={handleSubmit(onSubmit)}
+            >
+              Sign Up
+            </UIButton>
+          </LoginButtonContainer>
+        )}
+      </UIView.Animated>
     </KeyboardAwareScrollView>
   );
 }

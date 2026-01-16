@@ -1,13 +1,23 @@
 import React, { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { theme } from "@/theme";
 
-export function WelcomeTitle({ children }: { children: ReactNode }) {
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+export function WelcomeTitle({
+  children,
+  heightPercentage = 50,
+}: {
+  children: ReactNode;
+  heightPercentage?: number;
+}) {
+  const height = (SCREEN_HEIGHT * heightPercentage) / 100;
+
   return (
     <MaskedView
-      style={styles.maskedView}
+      style={[styles.maskedView, { height }]}
       maskElement={
         <View
           style={{
@@ -43,9 +53,7 @@ export function WelcomeTitle({ children }: { children: ReactNode }) {
 const styles = StyleSheet.create({
   maskedView: {
     marginTop: theme.spacing.medium,
-    flex: 1,
     flexDirection: "row",
-    height: "100%",
     zIndex: 0,
   },
   gradient: {
