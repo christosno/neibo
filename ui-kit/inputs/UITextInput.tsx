@@ -9,7 +9,8 @@ type UITextInputProps = ComponentProps<typeof TextInput> & {
 };
 
 export function UITextInput(props: UITextInputProps) {
-  const { placeholder, value, onChangeText, ...rest } = props;
+  const { placeholder, value, onChangeText, placeholderTextColor, ...rest } =
+    props;
   const [isFocused, setIsFocused] = useState(false);
   return (
     <TextInput
@@ -18,6 +19,8 @@ export function UITextInput(props: UITextInputProps) {
         { borderColor: isFocused ? theme.colors.yellow : theme.colors.white },
       ]}
       placeholder={placeholder}
+      placeholderTextColor={placeholderTextColor || theme.colors.slateLight}
+      cursorColor={theme.colors.slateLight}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       value={value}
@@ -36,5 +39,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.border.radius.xlarge,
     paddingHorizontal: 15,
     backgroundColor: theme.colors.white,
+    color: theme.colors.slateDark,
   },
 });

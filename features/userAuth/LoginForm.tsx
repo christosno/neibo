@@ -54,7 +54,7 @@ export function LoginForm() {
       />
       {errors.email && (
         <UIText
-          size={theme.fontSizes.small}
+          size="small"
           style={{ paddingLeft: theme.spacing.small }}
           align="left"
           color="error"
@@ -69,7 +69,7 @@ export function LoginForm() {
         render={({ field: { onChange, onBlur, value } }) => (
           <UITextInput
             placeholder="Password"
-            secureTextEntry
+            // secureTextEntry
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -78,7 +78,7 @@ export function LoginForm() {
       />
       {errors.password && (
         <UIText
-          size={theme.fontSizes.small}
+          size="small"
           style={{ paddingLeft: theme.spacing.small }}
           align="left"
           color="error"
@@ -103,7 +103,7 @@ export function LoginForm() {
           />
           {errors.username && (
             <UIText
-              size={theme.fontSizes.small}
+              size="small"
               style={{ paddingLeft: theme.spacing.small }}
               align="left"
               color="error"
