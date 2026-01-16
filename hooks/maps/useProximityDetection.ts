@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import type { GeocodedSpot } from "./useGeocodeTourSpots";
-import type { Coordinates } from "@/hooks/useGetCurrentPosition";
+import type { Coordinates } from "@/hooks/maps/useGetCurrentPosition";
 import { calculateDistance } from "@/utils/location";
+import { GeocodedSpot } from "./useGeocodeTourSpots";
 
 type UseProximityDetectionOptions = {
   proximityThreshold?: number; // in meters, default 40

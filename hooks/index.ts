@@ -1,3 +1,3 @@
 export * from "./useThrottle";
 export * from "./useRequestLocationPermissions";
-export * from "./useGetCurrentPosition";
+export * from "./maps/useGetCurrentPosition";

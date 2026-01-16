@@ -2,7 +2,7 @@ import { Modal, Pressable, StyleSheet } from "react-native";
 import { UIView } from "../layout/UIView";
 import { UIText } from "../typography/UIText";
 import { Ionicons } from "@expo/vector-icons";
-import type { GeocodedSpot } from "@/hooks/useGeocodeTourSpots";
+import type { GeocodedSpot } from "@/hooks/maps/useGeocodeTourSpots";
 
 type SpotDescriptionModalProps = {
   spot: GeocodedSpot | null;
