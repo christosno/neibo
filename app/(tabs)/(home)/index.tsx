@@ -47,109 +47,45 @@ export default function Home() {
           </UIText>
           <UIVerticalSpacer height={theme.spacing.large} />
 
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            City *
-          </UIText>
-          <Controller
+          <UITextInput
+            label="City *"
             control={control}
             name="city"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <UITextInput
-                placeholder="City"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder="City"
+            hasError={!!errors.city}
+            errorMessage={errors.city?.message}
           />
-          {errors.city && (
-            <UIText
-              size="small"
-              style={{ paddingLeft: theme.spacing.small }}
-              align="left"
-              color="error"
-            >
-              {errors.city.message}
-            </UIText>
-          )}
+
           <UIVerticalSpacer height={theme.spacing.medium} />
 
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            Neighborhood
-          </UIText>
-          <Controller
+          <UITextInput
+            label="Neighborhood"
             control={control}
             name="neighborhood"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <UITextInput
-                placeholder="Neighborhood"
-                value={value || ""}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder="Neighborhood"
+            hasError={!!errors.neighborhood}
+            errorMessage={errors.neighborhood?.message}
           />
+
           <UIVerticalSpacer height={theme.spacing.medium} />
 
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            Tour Duration
-          </UIText>
-          <Controller
+          <UITextInput
+            label="Tour Duration"
             control={control}
             name="duration"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <UITextInput
-                placeholder={"Duration in minutes"}
-                value={value?.toString() || ""}
-                onChangeText={(text) => {
-                  const numValue = Number(text);
-                  onChange(isNaN(numValue) ? 0 : numValue);
-                }}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder={"Duration in minutes"}
+            hasError={!!errors.duration}
+            errorMessage={errors.duration?.message}
           />
-          {errors.duration && (
-            <UIText
-              size="small"
-              style={{ paddingLeft: theme.spacing.small }}
-              align="left"
-              color="error"
-            >
-              {errors.duration.message}
-            </UIText>
-          )}
+
           <UIVerticalSpacer height={theme.spacing.medium} />
 
-          {/* Tour Theme */}
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            Tour Theme / Style *
-          </UIText>
           <Controller
             control={control}
             name="tourTheme"
             render={({ field: { onChange, value } }) => (
               <UISelect
+                label="Tour Theme / Style *"
                 placeholder="Tour Theme / Style *"
                 value={value}
                 onChange={onChange}
@@ -163,50 +99,26 @@ export default function Home() {
           />
           <UIVerticalSpacer height={theme.spacing.medium} />
 
-          {/* Start Location */}
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            Start Location
-          </UIText>
-          <Controller
+          <UITextInput
+            label="Start Location"
             control={control}
             name="startLocation"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <UITextInput
-                placeholder="Start Location (optional, e.g., Plaça de Catalunya)"
-                value={value || ""}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder="Start Location (optional, e.g., Plaça de Catalunya)"
+            hasError={!!errors.startLocation}
+            errorMessage={errors.startLocation?.message}
           />
+
           <UIVerticalSpacer height={theme.spacing.medium} />
 
-          {/* Language */}
-          <UIText
-            size="small"
-            align="left"
-            color="yellow"
-            style={{ marginBottom: theme.spacing.tiny }}
-          >
-            Language
-          </UIText>
-          <Controller
+          <UITextInput
+            label="Language"
             control={control}
             name="language"
-            render={({ field: { onChange, value, onBlur } }) => (
-              <UITextInput
-                placeholder="Language (optional, e.g., English)"
-                value={value || ""}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder="Language (optional, e.g., English)"
+            hasError={!!errors.language}
+            errorMessage={errors.language?.message}
           />
+
           <UIVerticalSpacer height={theme.spacing.xLarge} />
 
           {error && (
@@ -221,14 +133,16 @@ export default function Home() {
           )}
 
           {/* Submit Button */}
-          <UIButton
-            isLoading={isPending}
-            variant="outlined"
-            extended
-            onPress={handleSubmit(onSubmit)}
-          >
-            Generate Tour
-          </UIButton>
+          <UIView.Animated linearTransition>
+            <UIButton
+              isLoading={isPending}
+              variant="outlined"
+              extended
+              onPress={handleSubmit(onSubmit)}
+            >
+              Generate Tour
+            </UIButton>
+          </UIView.Animated>
           <UIVerticalSpacer height={theme.spacing.large} />
         </UIView>
       </KeyboardAwareScrollView>

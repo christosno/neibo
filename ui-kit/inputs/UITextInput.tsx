@@ -4,11 +4,15 @@ import { TextInput, StyleSheet } from "react-native";
 import { UIView } from "../layout/UIView";
 import { FadeInUp, FadeOutUp } from "react-native-reanimated";
 import { UIText } from "../typography/UIText";
+import { Control, Controller } from "react-hook-form";
+import { UIVerticalSpacer } from "../layout/UIVerticalSpacer";
 
 type UITextInputProps = ComponentProps<typeof TextInput> & {
+  control: Control<any>;
+  name: string;
+  label?: string;
+  labelColor?: UIThemeColor;
   placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
   backroundColor?: UIThemeColor;
   placeholderTextColor?: UIThemeColor;
   borderColor?: UIThemeColor;
@@ -18,47 +22,58 @@ type UITextInputProps = ComponentProps<typeof TextInput> & {
 
 export function UITextInput(props: UITextInputProps) {
   const {
+    control,
+    name,
+    label,
+    labelColor = "yellow",
     placeholder,
     backroundColor = "white",
-    value,
-    onChangeText,
     placeholderTextColor = "slateLight",
     borderColor = "yellow",
     hasError = false,
-    onFocus,
-    onBlur,
     errorMessage,
     ...rest
   } = props;
   const [isFocused, setIsFocused] = useState(false);
   return (
     <UIView.Animated linearTransition>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            backgroundColor: theme.colors[backroundColor],
-            borderColor: hasError
-              ? theme.colors.error
-              : isFocused
-                ? theme.colors[borderColor]
-                : theme.colors[backroundColor],
-          },
-        ]}
-        placeholder={placeholder}
-        placeholderTextColor={theme.colors[placeholderTextColor]}
-        cursorColor={theme.colors[placeholderTextColor]}
-        onFocus={(e) => {
-          onFocus?.(e);
-          setIsFocused(true);
-        }}
-        onBlur={(e) => {
-          onBlur?.(e);
-          setIsFocused(false);
-        }}
-        value={value}
-        onChangeText={onChangeText}
-        {...rest}
+      {label && (
+        <UIText size="small" align="left" color={labelColor}>
+          {label}
+        </UIText>
+      )}
+      <UIVerticalSpacer height={theme.spacing.tiny} />
+      <Controller
+        control={control}
+        name={name}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors[backroundColor],
+                borderColor: hasError
+                  ? theme.colors.error
+                  : isFocused
+                    ? theme.colors[borderColor]
+                    : theme.colors[backroundColor],
+              },
+            ]}
+            placeholder={placeholder}
+            placeholderTextColor={theme.colors[placeholderTextColor]}
+            cursorColor={theme.colors[placeholderTextColor]}
+            onFocus={() => {
+              setIsFocused(true);
+            }}
+            onBlur={() => {
+              onBlur();
+              setIsFocused(false);
+            }}
+            value={value}
+            onChangeText={onChange}
+            {...rest}
+          />
+        )}
       />
       {hasError && (
         <UIView.Animated entering={FadeInUp} exiting={FadeOutUp}>

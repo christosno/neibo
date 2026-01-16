@@ -1,4 +1,4 @@
-import { theme } from "@/theme";
+import { theme, UIThemeColor } from "@/theme";
 import { useState, useRef } from "react";
 import {
   StyleSheet,
@@ -8,17 +8,29 @@ import {
   Modal,
 } from "react-native";
 import { UIText } from "../typography/UIText";
+import { UIView } from "../layout/UIView";
+import { UIVerticalSpacer } from "../layout/UIVerticalSpacer";
 
 type UISelectProps<T extends string> = {
   placeholder: string;
   value: T | undefined;
+  label?: string;
+  labelColor?: UIThemeColor;
   onChange: (value: T) => void;
   options: { label: string; value: T }[];
   error?: string;
 };
 
 export function UISelect<T extends string>(props: UISelectProps<T>) {
-  const { placeholder, value, onChange, options, error } = props;
+  const {
+    placeholder,
+    value,
+    label,
+    labelColor = "yellow",
+    onChange,
+    options,
+    error,
+  } = props;
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectPosition, setSelectPosition] = useState({
@@ -42,7 +54,13 @@ export function UISelect<T extends string>(props: UISelectProps<T>) {
   };
 
   return (
-    <View>
+    <UIView.Animated linearTransition>
+      {label && (
+        <UIText size="small" align="left" color={labelColor}>
+          {label}
+        </UIText>
+      )}
+      <UIVerticalSpacer height={theme.spacing.tiny} />
       <TouchableOpacity
         ref={selectRef as any}
         style={[
@@ -60,7 +78,7 @@ export function UISelect<T extends string>(props: UISelectProps<T>) {
       >
         <UIText
           color={selectedOption ? "black" : "slateDark"}
-          size={theme.fontSizes.medium}
+          size="medium"
           align="left"
         >
           {selectedOption ? selectedOption.label : placeholder}
@@ -109,7 +127,7 @@ export function UISelect<T extends string>(props: UISelectProps<T>) {
                 >
                   <UIText
                     color={value === option.value ? "black" : "slateDark"}
-                    size={theme.fontSizes.medium}
+                    size="medium"
                     align="left"
                   >
                     {option.label}
@@ -122,7 +140,7 @@ export function UISelect<T extends string>(props: UISelectProps<T>) {
       </Modal>
       {error && (
         <UIText
-          size={theme.fontSizes.small}
+          size="small"
           style={{
             paddingLeft: theme.spacing.small,
             paddingTop: theme.spacing.tiny,
@@ -133,7 +151,7 @@ export function UISelect<T extends string>(props: UISelectProps<T>) {
           {error}
         </UIText>
       )}
-    </View>
+    </UIView.Animated>
   );
 }
 

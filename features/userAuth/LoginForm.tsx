@@ -41,41 +41,30 @@ export function LoginForm() {
       enableOnAndroid={true}
       extraScrollHeight={100}
     >
-      <Controller
+      <UITextInput
         control={control}
         name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <UITextInput
-            backroundColor="slateLight"
-            placeholderTextColor="slate"
-            placeholder="Email"
-            keyboardType="email-address"
-            value={value}
-            onChangeText={onChange}
-            hasError={!!errors.email}
-            errorMessage={errors.email?.message}
-            onBlur={onBlur}
-          />
-        )}
+        backroundColor="slateLight"
+        placeholderTextColor="slate"
+        placeholder="Email"
+        keyboardType="email-address"
+        hasError={!!errors.email}
+        errorMessage={errors.email?.message}
       />
+
       <UIVerticalSpacer height={theme.spacing.medium} />
-      <Controller
+
+      <UITextInput
         control={control}
         name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <UITextInput
-            placeholder="Password"
-            backroundColor="slateLight"
-            placeholderTextColor="slate"
-            // secureTextEntry
-            value={value}
-            onChangeText={onChange}
-            hasError={!!errors.password}
-            errorMessage={errors.password?.message}
-            onBlur={onBlur}
-          />
-        )}
+        placeholder="Password"
+        backroundColor="slateLight"
+        placeholderTextColor="slate"
+        // secureTextEntry
+        hasError={!!errors.password}
+        errorMessage={errors.password?.message}
       />
+
       {isSignUp ? (
         <UIView.Animated
           linearTransition
@@ -83,21 +72,15 @@ export function LoginForm() {
           exiting={FadeOutUp.duration(300)}
         >
           <UIVerticalSpacer height={theme.spacing.medium} />
-          <Controller
+
+          <UITextInput
             control={control}
             name="username"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <UITextInput
-                placeholder="Username"
-                backroundColor="slateLight"
-                placeholderTextColor="slate"
-                value={value || ""}
-                onChangeText={onChange}
-                hasError={!!errors.username}
-                errorMessage={errors.username?.message}
-                onBlur={onBlur}
-              />
-            )}
+            placeholder="Username"
+            backroundColor="slateLight"
+            placeholderTextColor="slate"
+            hasError={!!errors.username}
+            errorMessage={errors.username?.message}
           />
         </UIView.Animated>
       ) : null}
