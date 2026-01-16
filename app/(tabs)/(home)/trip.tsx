@@ -18,6 +18,7 @@ import type { ComponentRef } from "react";
 import { useGetCurrentPosition } from "@/hooks/useGetCurrentPosition";
 import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermissions";
 import { useProximityDetection } from "@/hooks/useProximityDetection";
+import { useSimulateTour } from "@/simulation/useSimulateTour";
 
 /**
  * Calculate camera position to fit all markers
@@ -81,12 +82,25 @@ export default function Trip() {
   // Request location permissions
   useRequestLocationPermissions();
 
-  // Get and watch user location
-  const { coordinates: userLocation } = useGetCurrentPosition({
-    watch: true,
-    timeInterval: 5000,
-    distanceInterval: 10,
-  });
+  // // Get and watch user location
+  // const { coordinates: userLocation } = useGetCurrentPosition({
+  //   watch: true,
+  //   timeInterval: 5000,
+  //   distanceInterval: 10,
+  // });
+
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+
+  const { userLocation } = useSimulateTour(
+    geocodedSpots.map((spot) => ({
+      latitude: spot.latitude,
+      longitude: spot.longitude,
+    }))
+  );
+
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
 
   // Monitor distance to spots and show description when within 40 meters
   const { nearbySpot, clearNearbySpot } = useProximityDetection(
@@ -117,15 +131,20 @@ export default function Trip() {
       coordinates: spot.coordinates,
       title: spot.title,
       subtitle: spot.description,
+      systemImage: "mappin.circle.fill",
+      tintColor: "#365314", // Green color for tour spots
     }));
 
     // Add user location marker if available
+    console.log("👉 ~ Trip ~ userLocation:", userLocation);
     if (userLocation) {
       spotMarkers.push({
         key: "user-location",
         coordinates: userLocation,
         title: "Your Location",
         subtitle: "You are here",
+        systemImage: "location.circle.fill",
+        tintColor: "#3b82f6", // Blue color for user location
       });
     }
 
