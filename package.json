@@ -10,7 +10,8 @@
     "prebuild": "expo prebuild",
     "prebuild:clean": "expo prebuild --clean",
     "lint": "expo lint",
-    "lint:fix": "expo lint --fix"
+    "lint:fix": "expo lint --fix",
+    "android:dev:build": "eas build --platform android --profile development"
   },
   "dependencies": {
     "@expo-google-fonts/caveat": "0.4.2",
