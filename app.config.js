@@ -28,6 +28,11 @@ export default {
       predictiveBackGestureEnabled: false,
       package: "com.cnounis.neibo",
       softwareKeyboardLayoutMode: "pan",
+      config: {
+        googleMaps: {
+          apiKey: process.env.GOOGLE_MAPS_API_KEY,
+        },
+      },
     },
     web: {
       favicon: "./assets/favicon.png",
@@ -68,6 +73,9 @@ export default {
     ],
     extra: {
       BASE_URL: process.env.BASE_URL || process.env.EXPO_PUBLIC_BASE_URL,
+      eas: {
+        projectId: "0540ce84-4e6b-41e5-9a7c-28cfa05b5755",
+      },
     },
   },
 };
