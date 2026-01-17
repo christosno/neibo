@@ -1,8 +1,7 @@
-import { theme } from "@/theme";
 import { UIView } from "../layout/UIView";
 import { UIText } from "../typography/UIText";
 import { ReactNode } from "react";
-import { StyleSheet } from "react-native";
+import * as Haptics from "expo-haptics";
 
 export function UITextButton({
   children,
@@ -12,7 +11,12 @@ export function UITextButton({
   onPress: () => void;
 }) {
   return (
-    <UIView.Pressable onPress={onPress}>
+    <UIView.Pressable
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        onPress();
+      }}
+    >
       <UIText color="yellow">{children}</UIText>
     </UIView.Pressable>
   );
