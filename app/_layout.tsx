@@ -1,9 +1,11 @@
 import React from "react";
 import { Stack } from "expo-router";
+import { View } from "react-native";
 import { useAuth } from "@/authentication/useAuth";
 import { useRequestLocationPermissions } from "@/hooks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { defaultScreenOptions } from "@/constants/navigationOptions";
+import { theme } from "@/theme";
 
 export default function Layout() {
   const queryClient = new QueryClient();
@@ -17,7 +19,8 @@ export default function Layout() {
   useRequestLocationPermissions();
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={defaultScreenOptions}>
+      <View style={{ flex: 1, backgroundColor: theme.colors.slateDark }}>
+        <Stack screenOptions={defaultScreenOptions}>
         <Stack.Protected guard={!shouldShowLogin}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>
@@ -25,6 +28,7 @@ export default function Layout() {
           <Stack.Screen name="login" options={{ headerShown: false }} />
         </Stack.Protected>
       </Stack>
+      </View>
     </QueryClientProvider>
   );
 }
