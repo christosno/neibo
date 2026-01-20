@@ -7,17 +7,21 @@ import { defaultScreenOptions } from "@/constants/navigationOptions";
 
 export default function Layout() {
   const queryClient = new QueryClient();
-  const user = useAuth((state) => {
-    return state.user;
+  const isAuthenticated = useAuth((state) => {
+    return state.isAuthenticated;
   });
+  const isGuest = useAuth((state) => {
+    return state.isGuest;
+  });
+  const shouldShowLogin = !isAuthenticated && !isGuest;
   useRequestLocationPermissions();
   return (
     <QueryClientProvider client={queryClient}>
       <Stack screenOptions={defaultScreenOptions}>
-        <Stack.Protected guard={!!user}>
+        <Stack.Protected guard={!shouldShowLogin}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>
-        <Stack.Protected guard={!user}>
+        <Stack.Protected guard={shouldShowLogin}>
           <Stack.Screen name="login" options={{ headerShown: false }} />
         </Stack.Protected>
       </Stack>

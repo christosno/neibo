@@ -9,11 +9,16 @@ type Auth = {
   login: (email: string, password: string) => void;
   signUp: (email: string, password: string, username: string) => void;
   logout: () => void;
+  continueAsGuest: () => void;
+  isGuest: boolean;
+  isAuthenticated: boolean;
 };
 
 export const useAuth = create<Auth>((set) => ({
   user: null,
   initializing: true,
+  isGuest: false,
+  isAuthenticated: false,
   isLoading: false,
   error: null,
   login: async (email: string, password: string) => {
@@ -24,7 +29,7 @@ export const useAuth = create<Auth>((set) => ({
         token: response.token,
         refreshToken: response.refreshToken,
       });
-      set({ user: response.user });
+      set({ user: response.user, isGuest: false, isAuthenticated: true });
     } catch (error) {
       console.log("🚀 ~ error:", error);
       //TODO: Handle the error from backend and set the error message
@@ -41,7 +46,7 @@ export const useAuth = create<Auth>((set) => ({
         token: response.token,
         refreshToken: response.refreshToken,
       });
-      set({ user: response.user });
+      set({ user: response.user, isGuest: false, isAuthenticated: true });
     } catch (error) {
       console.log("🚀 ~ error:", error);
       //TODO: Handle the error from backend and set the error message
@@ -51,6 +56,9 @@ export const useAuth = create<Auth>((set) => ({
     }
   },
   logout: () => {
-    set({ user: null, error: null });
+    set({ user: null, error: null, isAuthenticated: false });
+  },
+  continueAsGuest: () => {
+    set({ user: null, error: null, isGuest: true, isAuthenticated: false });
   },
 }));

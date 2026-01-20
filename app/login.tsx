@@ -6,9 +6,9 @@ import { UIView } from "@/ui-kit/layout/UIView";
 import { theme } from "@/theme";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
-import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { UITextButton } from "@/ui-kit/buttons/UITextButton";
+import { useAuth } from "@/authentication/useAuth";
 
 export default function Login() {
   return (
@@ -56,6 +56,7 @@ function LoginComponent() {
 }
 
 function ContinueAsGuest() {
+  const  continueAsGuest  = useAuth(state => state.continueAsGuest);
   return (
     <UIView.Animated
       linearTransition
@@ -66,7 +67,7 @@ function ContinueAsGuest() {
       <UIText size="medium" align="center" color="yellow">
         or
       </UIText>
-      <UITextButton onPress={() => {}}>Continue as Guest</UITextButton>
+      <UITextButton onPress={continueAsGuest}>Continue as Guest</UITextButton>
     </UIView.Animated>
   );
 }
