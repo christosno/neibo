@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GenerateAiTourResponse } from "../generate-tour-with-ai/generate-ai-tour";
 import { geocodeAddress } from "@/utils/location";
 
@@ -82,5 +82,10 @@ export const useGeocodeTourSpots = (
     geocodeSpots();
   }, [tourData]);
 
-  return { geocodedSpots, isLoading, error };
+  // Sort spots by positionOrder to ensure correct route order
+  const sortedSpots = useMemo(() => {
+    return [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
+  }, [geocodedSpots]);
+
+  return { geocodedSpots: sortedSpots, isLoading, error };
 };

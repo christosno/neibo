@@ -54,14 +54,10 @@ export function GoogleMapsComponent() {
     const calculated = calculateCameraPosition(geocodedSpots);
     return calculated;
   }, [geocodedSpots]);
-
-  // Sort spots by positionOrder to ensure correct route order
-  const sortedSpots = useMemo(() => {
-    return [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
-  }, [geocodedSpots]);
+  
 
   const googleMarkers = useMemo(() => {
-    const spotMarkers = sortedSpots.map((spot, index) => ({
+    const spotMarkers = geocodedSpots.map((spot, index) => ({
       id: `spot-${spot.positionOrder}-${index}`,
       coordinates: spot.coordinates,
       title: spot.title,
@@ -77,9 +73,9 @@ export function GoogleMapsComponent() {
       });
     }
     return spotMarkers;
-  }, [sortedSpots, userLocation]);
+  }, [geocodedSpots, userLocation]);
 
-  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(sortedSpots);
+  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(geocodedSpots);
 
   // Loading state
   if (isLoading || routePolylineLoading) {

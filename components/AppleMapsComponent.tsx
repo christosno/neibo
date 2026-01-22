@@ -61,15 +61,9 @@ export function AppleMapsComponent() {
     return calculated;
   }, [geocodedSpots]);
 
-  // Sort spots by positionOrder to ensure correct route order
-  const sortedSpots = useMemo(() => {
-    const sorted = [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
-    return sorted;
-  }, [geocodedSpots]);
-
   // Prepare markers for the map (must be before early returns)
   const appleMarkers = useMemo(() => {
-    const spotMarkers = sortedSpots.map((spot, index) => ({
+    const spotMarkers = geocodedSpots.map((spot, index) => ({
       id: `spot-${spot.positionOrder}-${index}`,
       coordinates: spot.coordinates,
       title: spot.title,
@@ -89,9 +83,9 @@ export function AppleMapsComponent() {
     }
 
     return spotMarkers;
-  }, [sortedSpots, userLocation]);
+  }, [geocodedSpots, userLocation]);
 
-  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(sortedSpots);
+  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(geocodedSpots);
 
   const handleZoomIn = () => {
     if (!mapRef.current || !currentCameraPosition.coordinates) return;
