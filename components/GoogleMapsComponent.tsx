@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { SpotDescriptionModal } from "@/ui-kit/feedback/SpotDescriptionModal";
 import { useProximityDetection } from "@/hooks/maps/useProximityDetection";
+import { useCreatePolylines } from "@/hooks/maps/useCreatePolylines";
 
 export function GoogleMapsComponent() {
   const tourData = useAiTourStore((state) => {
@@ -30,8 +31,8 @@ export function GoogleMapsComponent() {
 
   const { userLocation } = useSimulateTour(
     geocodedSpots.map((spot) => ({
-      latitude: spot.latitude,
-      longitude: spot.longitude,
+      latitude: spot.coordinates.latitude,
+      longitude: spot.coordinates.longitude,
     }))
   );
 
@@ -78,22 +79,10 @@ export function GoogleMapsComponent() {
     return spotMarkers;
   }, [sortedSpots, userLocation]);
 
-  // Create polyline route connecting all spots in order
-  const routePolyline = useMemo(() => {
-    if (sortedSpots.length < 2) {
-      return null;
-    }
-
-    return {
-      id: "tour-route",
-      coordinates: sortedSpots.map((spot) => spot.coordinates),
-      color: "#365314", // Orange color for the route
-      width: 2,
-    };
-  }, [sortedSpots]);
+  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(sortedSpots);
 
   // Loading state
-  if (isLoading) {
+  if (isLoading || routePolylineLoading) {
     return (
       <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
         <UIView gap="medium" mainAxis="center" crossAxis="center">

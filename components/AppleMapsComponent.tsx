@@ -13,6 +13,8 @@ import { Pressable, StyleSheet } from "react-native";
 import { SpotDescriptionModal } from "@/ui-kit/feedback/SpotDescriptionModal";
 import { Ionicons } from "@expo/vector-icons";
 import { useProximityDetection } from "@/hooks/maps/useProximityDetection";
+import { useCreatePolylines } from "@/hooks/maps/useCreatePolylines";
+import { useGetCurrentPosition } from "@/hooks";
 
 export function AppleMapsComponent() {
   const tourData = useAiTourStore((state) => {
@@ -35,8 +37,8 @@ export function AppleMapsComponent() {
 
   const { userLocation } = useSimulateTour(
     geocodedSpots.map((spot) => ({
-      latitude: spot.latitude,
-      longitude: spot.longitude,
+      latitude: spot.coordinates.latitude,
+      longitude: spot.coordinates.longitude,
     }))
   );
 
@@ -61,7 +63,8 @@ export function AppleMapsComponent() {
 
   // Sort spots by positionOrder to ensure correct route order
   const sortedSpots = useMemo(() => {
-    return [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
+    const sorted = [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
+    return sorted;
   }, [geocodedSpots]);
 
   // Prepare markers for the map (must be before early returns)
@@ -75,7 +78,6 @@ export function AppleMapsComponent() {
     }));
 
     // Add user location marker if available
-    console.log("👉 ~ Trip ~ userLocation:", userLocation);
     if (userLocation) {
       spotMarkers.push({
         id: "user-location",
@@ -89,19 +91,7 @@ export function AppleMapsComponent() {
     return spotMarkers;
   }, [sortedSpots, userLocation]);
 
-  // Create polyline route connecting all spots in order
-  const routePolyline = useMemo(() => {
-    if (sortedSpots.length < 2) {
-      return null;
-    }
-
-    return {
-      id: "tour-route",
-      coordinates: sortedSpots.map((spot) => spot.coordinates),
-      color: "#365314", // Orange color for the route
-      width: 2,
-    };
-  }, [sortedSpots]);
+  const {polyline: routePolyline, isLoading: routePolylineLoading} = useCreatePolylines(sortedSpots);
 
   const handleZoomIn = () => {
     if (!mapRef.current || !currentCameraPosition.coordinates) return;
@@ -128,7 +118,7 @@ export function AppleMapsComponent() {
   };
 
   // Loading state
-  if (isLoading) {
+  if (isLoading || routePolylineLoading) {
     return (
       <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
         <UIView gap="medium" mainAxis="center" crossAxis="center">

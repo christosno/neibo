@@ -12,9 +12,10 @@ import {
   isUnauthorizedError,
 } from "./errors";
 import { isAuthenticationServiceResponseBase } from "../authentication/auth-api";
+import Constants from "expo-constants";
 
 // TODO: Add environment variables
-const BASE_URL = "https://neibo-b-api-staging.onrender.com/api";
+const BASE_URL = Constants.expoConfig?.extra?.BASE_URL as string | undefined;
 
 const createAxiosInstance = (baseURL?: string) => {
   const axiosInstance = axios.create({

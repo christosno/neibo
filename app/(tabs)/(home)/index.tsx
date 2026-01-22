@@ -73,6 +73,7 @@ export default function Home() {
             label="Tour Duration"
             control={control}
             name="duration"
+            keyboardType="numeric"
             placeholder={"Duration in minutes"}
             hasError={!!errors.duration}
             errorMessage={errors.duration?.message}
