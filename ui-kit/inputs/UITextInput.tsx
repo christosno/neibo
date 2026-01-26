@@ -18,6 +18,7 @@ type UITextInputProps = ComponentProps<typeof TextInput> & {
   borderColor?: UIThemeColor;
   hasError?: boolean;
   errorMessage?: string;
+  height?: number;
 };
 
 export function UITextInput(props: UITextInputProps) {
@@ -33,6 +34,7 @@ export function UITextInput(props: UITextInputProps) {
     hasError = false,
     errorMessage,
     keyboardType = "default",
+    height,
     ...rest
   } = props;
   const [isFocused, setIsFocused] = useState(false);
@@ -58,6 +60,7 @@ export function UITextInput(props: UITextInputProps) {
                   : isFocused
                     ? theme.colors[borderColor]
                     : theme.colors[backroundColor],
+                height: height || styles.input.height,
               },
             ]}
             keyboardType={keyboardType}

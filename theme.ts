@@ -34,6 +34,7 @@ export const theme = {
     medium: 12,
     large: 22,
     xLarge: 42,
+    xxLarge: 82,
   },
   fontFamily: {
     caveat: "Caveat_400Regular",

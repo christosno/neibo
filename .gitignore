@@ -43,3 +43,8 @@ android
 # Firebase configuration files (contain sensitive API keys)
 google-services.json
 GoogleService-Info.plist
+
+
+.claude/
+.claude.json
+*.local.json
