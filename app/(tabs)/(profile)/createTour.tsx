@@ -31,7 +31,7 @@ import {
 import { useCreateTour } from "@/hooks/create-tour/useCreateTour";
 import { defaultCameraPosition } from "@/constants/defaultPosition";
 
-type WizardStep = "info" | "spots";
+type WizardStep = "info" | "spots" | "summary";
 
 export default function CreateTour() {
   const insets = useSafeAreaInsets();
@@ -57,6 +57,7 @@ export default function CreateTour() {
   const { createTour, isPending, error } = useCreateTour();
 
   const spots = watch("spots");
+  const formValues = watch();
 
   const handleMapPress = (event: { coordinates: Coordinates }) => {
     const { latitude, longitude } = event.coordinates;
@@ -80,15 +81,25 @@ export default function CreateTour() {
     setValue("spots", updatedSpots);
   };
 
-  const handleNextStep = async () => {
+  const handleNextToSpots = async () => {
     const isValid = await trigger(["name", "description"], { shouldFocus: true });
     if (isValid) {
       setStep("spots");
     }
   };
 
-  const handlePreviousStep = () => {
+  const handleNextToSummary = () => {
+    if (spots.length > 0) {
+      setStep("summary");
+    }
+  };
+
+  const handleBackToInfo = () => {
     setStep("info");
+  };
+
+  const handleBackToSpots = () => {
+    setStep("spots");
   };
 
   const onSubmit = async (formData: CreateTourFormData) => {
@@ -118,6 +129,7 @@ export default function CreateTour() {
     }));
   }, [spots]);
 
+  // Step 1: Tour Information
   if (step === "info") {
     return (
       <UIView expanded color="slateDark">
@@ -144,7 +156,7 @@ export default function CreateTour() {
             <UIVerticalSpacer height={theme.spacing.medium} />
 
             <UITextInput
-              label="Description"
+              label="Description *"
               control={control}
               name="description"
               placeholder="Describe your tour"
@@ -236,7 +248,7 @@ export default function CreateTour() {
 
             <UIVerticalSpacer height={theme.spacing.xLarge} />
 
-            <UIButton variant="outlined" extended onPress={handleNextStep}>
+            <UIButton variant="outlined" extended onPress={handleNextToSpots}>
               Next: Add Spots
             </UIButton>
 
@@ -248,6 +260,139 @@ export default function CreateTour() {
   }
 
   // Step 2: Map for adding spots
+  if (step === "spots") {
+    return (
+      <UIView expanded color="slateDark">
+        {/* Header with back button */}
+        <UIView
+          row
+          padding="medium"
+          crossAxis="center"
+          mainAxis="space-between"
+          color="slateDark"
+        >
+          <Pressable onPress={handleBackToInfo} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={theme.colors.yellow} />
+            <UIText color="yellow" size="medium">
+              Back
+            </UIText>
+          </Pressable>
+          <UIText color="yellow" size="medium">
+            {spots.length} spot{spots.length !== 1 ? "s" : ""} added
+          </UIText>
+        </UIView>
+
+        {/* Instructions */}
+        <UIView padding="medium" color="slate">
+          <UIText color="slateLight" size="small" align="center">
+            Tap on the map to add spots to your tour
+          </UIText>
+        </UIView>
+
+        {/* Map */}
+        <UIView expanded>
+          {Platform.OS === "ios" ? (
+            <AppleMaps.View
+              ref={mapRef}
+              style={styles.map}
+              cameraPosition={defaultCameraPosition}
+              markers={markers}
+              onMapClick={handleMapPress}
+            />
+          ) : (
+            <GoogleMaps.View
+              style={styles.map}
+              cameraPosition={defaultCameraPosition}
+              markers={markers}
+              onMapClick={handleMapPress}
+            />
+          )}
+        </UIView>
+
+        {/* Spots list */}
+        {spots.length > 0 && (
+          <UIView style={styles.spotsListContainer}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.spotsListContent}
+            >
+              {spots.map((spot, index) => (
+                <UIView
+                  key={`spot-${index}`}
+                  color="slate"
+                  padding="medium"
+                  borderRadius="medium"
+                  style={styles.spotCard}
+                >
+                  <UIView row mainAxis="space-between" crossAxis="center">
+                    <UIView expanded>
+                      <UIText color="yellow" size="small" align="left">
+                        {index + 1}. {spot.title}
+                      </UIText>
+                      {spot.description && (
+                        <UIText
+                          color="slateLight"
+                          size="small"
+                          align="left"
+                          numberOfLines={1}
+                        >
+                          {spot.description}
+                        </UIText>
+                      )}
+                    </UIView>
+                    <Pressable
+                      onPress={() => handleRemoveSpot(index)}
+                      style={styles.removeButton}
+                    >
+                      <Ionicons
+                        name="close-circle"
+                        size={20}
+                        color={theme.colors.error}
+                      />
+                    </Pressable>
+                  </UIView>
+                </UIView>
+              ))}
+            </ScrollView>
+          </UIView>
+        )}
+
+        {/* Next button */}
+        <UIView
+          padding="large"
+          color="slateDark"
+          style={{ paddingBottom: insets.bottom + theme.spacing.large }}
+        >
+          {spots.length === 0 && (
+            <UIView paddingBottom="small">
+              <UIText color="slateLight" size="small" align="center">
+                Add at least one spot to continue
+              </UIText>
+            </UIView>
+          )}
+          <UIButton
+            variant="outlined"
+            extended
+            disabled={spots.length === 0}
+            onPress={handleNextToSummary}
+          >
+            Next: Review Tour
+          </UIButton>
+        </UIView>
+
+        {/* Spot form modal */}
+        <SpotFormModal
+          visible={spotModalVisible}
+          onClose={() => setSpotModalVisible(false)}
+          onSubmit={handleAddSpot}
+          coordinates={selectedCoordinates}
+        />
+      </UIView>
+    );
+  }
+
+  // Step 3: Summary
   return (
     <UIView expanded color="slateDark">
       {/* Header with back button */}
@@ -258,92 +403,179 @@ export default function CreateTour() {
         mainAxis="space-between"
         color="slateDark"
       >
-        <Pressable onPress={handlePreviousStep} style={styles.backButton}>
+        <Pressable onPress={handleBackToSpots} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.yellow} />
           <UIText color="yellow" size="medium">
             Back
           </UIText>
         </Pressable>
         <UIText color="yellow" size="medium">
-          {spots.length} spot{spots.length !== 1 ? "s" : ""} added
+          Review Tour
         </UIText>
       </UIView>
 
-      {/* Instructions */}
-      <UIView padding="medium" color="slate">
-        <UIText color="slateLight" size="small" align="center">
-          Tap on the map to add spots to your tour
-        </UIText>
-      </UIView>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + theme.spacing.xxLarge },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <UIView paddingHorizontal="large" paddingTop="medium" gap="large">
+          {/* Tour Name */}
+          <UIView color="slate" padding="medium" borderRadius="medium">
+            <UIText size="small" color="slateLight" align="left">
+              Tour Name
+            </UIText>
+            <UIVerticalSpacer height={theme.spacing.tiny} />
+            <UIText size="medium" color="yellow" align="left">
+              {formValues.name}
+            </UIText>
+          </UIView>
 
-      {/* Map */}
-      <UIView expanded>
-        {Platform.OS === "ios" ? (
-          <AppleMaps.View
-            ref={mapRef}
-            style={styles.map}
-            cameraPosition={defaultCameraPosition}
-            markers={markers}
-            onMapClick={handleMapPress}
-          />
-        ) : (
-          <GoogleMaps.View
-            style={styles.map}
-            cameraPosition={defaultCameraPosition}
-            markers={markers}
-            onMapClick={handleMapPress}
-          />
-        )}
-      </UIView>
+          {/* Description */}
+          <UIView color="slate" padding="medium" borderRadius="medium">
+            <UIText size="small" color="slateLight" align="left">
+              Description
+            </UIText>
+            <UIVerticalSpacer height={theme.spacing.tiny} />
+            <UIText size="medium" color="white" align="left">
+              {formValues.description}
+            </UIText>
+          </UIView>
 
-      {/* Spots list */}
-      {spots.length > 0 && (
-        <UIView style={styles.spotsListContainer}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.spotsListContent}
-          >
+          {/* Details Row */}
+          <UIView row gap="medium">
+            {formValues.duration_estimate && (
+              <UIView expanded color="slate" padding="medium" borderRadius="medium">
+                <UIText size="small" color="slateLight" align="left">
+                  Duration
+                </UIText>
+                <UIVerticalSpacer height={theme.spacing.tiny} />
+                <UIView row crossAxis="center" gap="tiny">
+                  <Ionicons
+                    name="time-outline"
+                    size={16}
+                    color={theme.colors.yellow}
+                  />
+                  <UIText size="medium" color="yellow" align="left">
+                    {formValues.duration_estimate} min
+                  </UIText>
+                </UIView>
+              </UIView>
+            )}
+            {formValues.distance_estimate && (
+              <UIView expanded color="slate" padding="medium" borderRadius="medium">
+                <UIText size="small" color="slateLight" align="left">
+                  Distance
+                </UIText>
+                <UIVerticalSpacer height={theme.spacing.tiny} />
+                <UIView row crossAxis="center" gap="tiny">
+                  <Ionicons
+                    name="walk-outline"
+                    size={16}
+                    color={theme.colors.yellow}
+                  />
+                  <UIText size="medium" color="yellow" align="left">
+                    {formValues.distance_estimate} km
+                  </UIText>
+                </UIView>
+              </UIView>
+            )}
+          </UIView>
+
+          {/* Visibility */}
+          <UIView color="slate" padding="medium" borderRadius="medium">
+            <UIText size="small" color="slateLight" align="left">
+              Visibility
+            </UIText>
+            <UIVerticalSpacer height={theme.spacing.tiny} />
+            <UIView row crossAxis="center" gap="tiny">
+              <Ionicons
+                name={formValues.isPublic ? "globe-outline" : "lock-closed-outline"}
+                size={16}
+                color={theme.colors.yellow}
+              />
+              <UIText size="medium" color="yellow" align="left">
+                {formValues.isPublic ? "Public" : "Private"}
+              </UIText>
+            </UIView>
+          </UIView>
+
+          {/* Tags */}
+          {formValues.tagIds && formValues.tagIds.length > 0 && (
+            <UIView color="slate" padding="medium" borderRadius="medium">
+              <UIText size="small" color="slateLight" align="left">
+                Tags
+              </UIText>
+              <UIVerticalSpacer height={theme.spacing.small} />
+              <UIView row gap="small" style={styles.tagsContainer}>
+                {formValues.tagIds.map((tag) => (
+                  <UIView
+                    key={tag}
+                    color="slateDark"
+                    paddingHorizontal="medium"
+                    paddingVertical="small"
+                    borderRadius="medium"
+                  >
+                    <UIText size="small" color="yellow">
+                      {tag}
+                    </UIText>
+                  </UIView>
+                ))}
+              </UIView>
+            </UIView>
+          )}
+
+          {/* Spots */}
+          <UIView>
+            <UIText size="medium" color="yellow" align="left">
+              Spots ({spots.length})
+            </UIText>
+            <UIVerticalSpacer height={theme.spacing.medium} />
             {spots.map((spot, index) => (
               <UIView
-                key={`spot-${index}`}
+                key={`summary-spot-${index}`}
                 color="slate"
                 padding="medium"
                 borderRadius="medium"
-                style={styles.spotCard}
+                style={styles.summarySpotCard}
               >
-                <UIView row mainAxis="space-between" crossAxis="center">
+                <UIView row crossAxis="flex-start" gap="medium">
+                  <UIView
+                    color="slateDark"
+                    style={styles.spotNumber}
+                    mainAxis="center"
+                    crossAxis="center"
+                  >
+                    <UIText size="small" color="yellow">
+                      {index + 1}
+                    </UIText>
+                  </UIView>
                   <UIView expanded>
-                    <UIText color="yellow" size="small" align="left">
-                      {index + 1}. {spot.title}
+                    <UIText size="medium" color="yellow" align="left">
+                      {spot.title}
                     </UIText>
                     {spot.description && (
-                      <UIText
-                        color="slateLight"
-                        size="small"
-                        align="left"
-                        numberOfLines={1}
-                      >
-                        {spot.description}
-                      </UIText>
+                      <>
+                        <UIVerticalSpacer height={theme.spacing.tiny} />
+                        <UIText
+                          size="small"
+                          color="slateLight"
+                          align="left"
+                          numberOfLines={2}
+                        >
+                          {spot.description}
+                        </UIText>
+                      </>
                     )}
                   </UIView>
-                  <Pressable
-                    onPress={() => handleRemoveSpot(index)}
-                    style={styles.removeButton}
-                  >
-                    <Ionicons
-                      name="close-circle"
-                      size={20}
-                      color={theme.colors.error}
-                    />
-                  </Pressable>
                 </UIView>
               </UIView>
             ))}
-          </ScrollView>
+          </UIView>
         </UIView>
-      )}
+      </ScrollView>
 
       {/* Error notification */}
       {error && (
@@ -362,31 +594,15 @@ export default function CreateTour() {
         color="slateDark"
         style={{ paddingBottom: insets.bottom + theme.spacing.large }}
       >
-        {spots.length === 0 && (
-          <UIView paddingBottom="small">
-            <UIText color="slateLight" size="small" align="center">
-              Add at least one spot to create your tour
-            </UIText>
-          </UIView>
-        )}
         <UIButton
           variant="outlined"
           extended
           isLoading={isPending}
-          disabled={spots.length === 0}
           onPress={handleSubmit(onSubmit)}
         >
           Create Tour
         </UIButton>
       </UIView>
-
-      {/* Spot form modal */}
-      <SpotFormModal
-        visible={spotModalVisible}
-        onClose={() => setSpotModalVisible(false)}
-        onSubmit={handleAddSpot}
-        coordinates={selectedCoordinates}
-      />
     </UIView>
   );
 }
@@ -417,5 +633,16 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     padding: 4,
+  },
+  tagsContainer: {
+    flexWrap: "wrap",
+  },
+  summarySpotCard: {
+    marginBottom: theme.spacing.small,
+  },
+  spotNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
   },
 });
