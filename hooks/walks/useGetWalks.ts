@@ -5,12 +5,11 @@ type UseGetWalksParams = {
   limit?: number;
 };
 
-export const useGetWalks = (params?: UseGetWalksParams) => {
-  const limit = params?.limit ?? 10;
+export const useGetWalks = () => {
 
   const result = useInfiniteQuery({
-    queryKey: ["walks", limit],
-    queryFn: ({ pageParam }) => getWalks({ page: pageParam, limit }),
+    queryKey: ["walks"],
+    queryFn: ({ pageParam }) => getWalks({ page: pageParam, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.data.pagination.hasNext) {

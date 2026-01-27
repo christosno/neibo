@@ -30,10 +30,12 @@ import {
 } from "@/hooks/create-tour/useCreateTourForm";
 import { useCreateTour } from "@/hooks/create-tour/useCreateTour";
 import { defaultCameraPosition } from "@/constants/defaultPosition";
+import { useQueryClient } from "@tanstack/react-query";
 
 type WizardStep = "info" | "spots" | "summary";
 
 export default function CreateTour() {
+  const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState<WizardStep>("info");
   const [spotModalVisible, setSpotModalVisible] = useState(false);
@@ -67,11 +69,23 @@ export default function CreateTour() {
   };
 
   const handleAddSpot = (spotData: Omit<SpotFormData, "positionOrder">) => {
-    const newSpot: SpotFormData = {
-      ...spotData,
-      positionOrder: spots.length,
-    };
-    setValue("spots", [...spots, newSpot]);
+    // Close modal first
+    setSpotModalVisible(false);
+
+    // Delay state update to allow modal animation to complete
+    setTimeout(() => {
+      const newSpot: SpotFormData = {
+        ...spotData,
+        positionOrder: spots.length,
+      };
+      setValue("spots", [...spots, newSpot]);
+      setSelectedCoordinates(null);
+    }, 100);
+  };
+
+  const handleCloseSpotModal = () => {
+    setSpotModalVisible(false);
+    setSelectedCoordinates(null);
   };
 
   const handleRemoveSpot = (index: number) => {
@@ -110,7 +124,8 @@ export default function CreateTour() {
     try {
       await createTour(formData);
       reset();
-      router.back();
+      queryClient.invalidateQueries({ queryKey: ["walks"] });
+      router.navigate("/tabs/(home)");
     } catch (err) {
       console.log("Create tour error:", err);
     }
@@ -384,7 +399,7 @@ export default function CreateTour() {
         {/* Spot form modal */}
         <SpotFormModal
           visible={spotModalVisible}
-          onClose={() => setSpotModalVisible(false)}
+          onClose={handleCloseSpotModal}
           onSubmit={handleAddSpot}
           coordinates={selectedCoordinates}
         />

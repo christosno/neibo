@@ -24,7 +24,7 @@ export default function Home() {
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useGetWalks({ limit: 10 });
+  } = useGetWalks();
 
   const handleTripPress = (walk: Walk) => {
     console.log("Trip pressed:", walk.id);

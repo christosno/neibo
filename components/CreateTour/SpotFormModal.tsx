@@ -73,8 +73,7 @@ export function SpotFormModal({
       reach_radius: data.reach_radius,
       imageUrls: data.imageUrl ? [data.imageUrl] : undefined,
     });
-    reset();
-    onClose();
+    // Don't close here - parent component handles closing and state updates
   };
 
   return (
