@@ -96,7 +96,9 @@ export default function CreateTour() {
   };
 
   const handleNextToSpots = async () => {
-    const isValid = await trigger(["name", "description"], { shouldFocus: true });
+    const isValid = await trigger(["name", "description"], {
+      shouldFocus: true,
+    });
     if (isValid) {
       setStep("spots");
     }
@@ -125,7 +127,7 @@ export default function CreateTour() {
       await createTour(formData);
       reset();
       queryClient.invalidateQueries({ queryKey: ["walks"] });
-      router.navigate("/tabs/(home)");
+      router.push("/(home)");
     } catch (err) {
       console.log("Create tour error:", err);
     }
@@ -403,6 +405,7 @@ export default function CreateTour() {
           onSubmit={handleAddSpot}
           coordinates={selectedCoordinates}
         />
+        <UIVerticalSpacer height={theme.spacing.large + insets.bottom} />
       </UIView>
     );
   }
@@ -462,7 +465,12 @@ export default function CreateTour() {
           {/* Details Row */}
           <UIView row gap="medium">
             {formValues.duration_estimate && (
-              <UIView expanded color="slate" padding="medium" borderRadius="medium">
+              <UIView
+                expanded
+                color="slate"
+                padding="medium"
+                borderRadius="medium"
+              >
                 <UIText size="small" color="slateLight" align="left">
                   Duration
                 </UIText>
@@ -480,7 +488,12 @@ export default function CreateTour() {
               </UIView>
             )}
             {formValues.distance_estimate && (
-              <UIView expanded color="slate" padding="medium" borderRadius="medium">
+              <UIView
+                expanded
+                color="slate"
+                padding="medium"
+                borderRadius="medium"
+              >
                 <UIText size="small" color="slateLight" align="left">
                   Distance
                 </UIText>
@@ -507,7 +520,9 @@ export default function CreateTour() {
             <UIVerticalSpacer height={theme.spacing.tiny} />
             <UIView row crossAxis="center" gap="tiny">
               <Ionicons
-                name={formValues.isPublic ? "globe-outline" : "lock-closed-outline"}
+                name={
+                  formValues.isPublic ? "globe-outline" : "lock-closed-outline"
+                }
                 size={16}
                 color={theme.colors.yellow}
               />
@@ -618,6 +633,7 @@ export default function CreateTour() {
           Create Tour
         </UIButton>
       </UIView>
+      <UIVerticalSpacer height={theme.spacing.large + insets.bottom} />
     </UIView>
   );
 }

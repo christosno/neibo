@@ -1,4 +1,9 @@
-import { FlatList, RefreshControl, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
@@ -93,13 +98,18 @@ export default function Home() {
 
   return (
     <UIView expanded color="slateDark">
-      <UIView paddingHorizontal="large" paddingTop="large" paddingBottom="medium">
+      <UIView
+        paddingHorizontal="large"
+        paddingTop="large"
+        paddingBottom="medium"
+      >
         <UIButton variant="outlined" onPress={() => router.push("/ai-tour")}>
           Create a Tour with AI
         </UIButton>
       </UIView>
 
       <FlatList
+        style={{ flex: 1 }}
         data={walks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -112,7 +122,7 @@ export default function Home() {
         ListEmptyComponent={renderEmptyList}
         contentContainerStyle={[
           styles.listContent,
-          { paddingBottom: insets.bottom + theme.spacing.large },
+          { paddingBottom: insets.bottom + theme.spacing.xxLarge },
         ]}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
