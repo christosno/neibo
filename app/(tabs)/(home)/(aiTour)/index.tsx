@@ -9,7 +9,7 @@ import { Controller } from "react-hook-form";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StyleSheet } from "react-native";
 import { theme } from "@/theme";
-import { useTourForm, TOUR_THEMES, TourFormData } from "./useTourForm";
+import { useTourForm, TOUR_THEMES, TourFormData } from "../../../../hooks/generate-tour-with-ai/useTourForm";
 import { useGenerateTourWithAi } from "@/hooks/generate-tour-with-ai/useGenerateTourWithAi";
 import { router } from "expo-router";
 
@@ -28,7 +28,7 @@ export default function AiTour() {
     try {
       await generateTour(formData);
       reset();
-      router.push("/trip");
+      router.push("/aiTrip");
     } catch (error) {
       console.log("👉 ~ onSubmit ~ error:", error);
     }

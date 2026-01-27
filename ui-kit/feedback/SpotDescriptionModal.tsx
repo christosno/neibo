@@ -2,10 +2,14 @@ import { Modal, Pressable, StyleSheet } from "react-native";
 import { UIView } from "../layout/UIView";
 import { UIText } from "../typography/UIText";
 import { Ionicons } from "@expo/vector-icons";
-import type { GeocodedSpot } from "@/hooks/maps/useGeocodeTourSpots";
+
+type SpotWithTitleAndDescription = {
+  title: string;
+  description: string;
+};
 
 type SpotDescriptionModalProps = {
-  spot: GeocodedSpot | null;
+  spot: SpotWithTitleAndDescription | null;
   visible: boolean;
   onClose: () => void;
 };

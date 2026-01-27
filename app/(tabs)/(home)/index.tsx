@@ -32,7 +32,7 @@ export default function Home() {
   } = useGetWalks();
 
   const handleTripPress = (walk: Walk) => {
-    console.log("Trip pressed:", walk.id);
+    router.push(`/tour/${walk.id}`);
   };
 
   const handleEndReached = () => {
@@ -103,7 +103,7 @@ export default function Home() {
         paddingTop="large"
         paddingBottom="medium"
       >
-        <UIButton variant="outlined" onPress={() => router.push("/ai-tour")}>
+        <UIButton variant="outlined" onPress={() => router.push("/(aiTour)")}>
           Create a Tour with AI
         </UIButton>
       </UIView>

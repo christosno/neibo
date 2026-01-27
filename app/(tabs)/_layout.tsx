@@ -15,6 +15,7 @@ export default function Layout() {
         screenOptions={{
           ...defaultScreenOptions,
           ...defaultTabBarOptions,
+          headerShown: false,
         }}
       >
         <Tabs.Screen
@@ -63,11 +64,11 @@ export default function Layout() {
       >
         <Label>Home</Label>
         <Icon sf="house.fill" drawable="ic_menu_myplaces" />
-        </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="(profile)" options={{ title: "Profile" }} >
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(profile)" options={{ title: "Profile" }}>
         <Label>Profile</Label>
         <Icon sf="person.fill" drawable="ic_menu_preferences" />
-        </NativeTabs.Trigger>
+      </NativeTabs.Trigger>
     </NativeTabs>
-  )
+  );
 }

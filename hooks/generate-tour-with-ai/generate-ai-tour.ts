@@ -1,4 +1,4 @@
-import { TourFormData } from "@/app/(tabs)/(home)/useTourForm";
+import { TourFormData } from "@/hooks/generate-tour-with-ai/useTourForm";
 import { http } from "@/services/http/http";
 import { z } from "zod";
 

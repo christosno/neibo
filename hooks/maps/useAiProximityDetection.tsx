@@ -1,31 +1,31 @@
 import { useState, useEffect } from "react";
 import type { Coordinates } from "@/hooks/maps/useGetCurrentPosition";
 import { calculateDistance } from "@/utils/location";
-import { GeocodedSpot } from "./useGeocodeTourSpots";
+import { AiGeocodedSpot } from "./useAiGeocodeTourSpots";
 
-type UseProximityDetectionOptions = {
+type UseAiProximityDetectionOptions = {
   proximityThreshold?: number; // in meters, default 40
 };
 
-type UseProximityDetectionResult = {
-  nearbySpot: GeocodedSpot | null;
+type UseAiProximityDetectionResult = {
+  nearbySpot: AiGeocodedSpot | null;
   clearNearbySpot: () => void;
 };
 
 /**
- * Hook to detect when user is within proximity threshold of tour spots
+ * Hook to detect when user is within proximity threshold of AI tour spots
  * @param userLocation Current user coordinates
- * @param spots Array of geocoded tour spots
+ * @param spots Array of geocoded AI tour spots
  * @param options Configuration options
  * @returns nearbySpot and function to clear it
  */
-export const useProximityDetection = (
+export const useAiProximityDetection = (
   userLocation: Coordinates | null,
-  spots: GeocodedSpot[],
-  options: UseProximityDetectionOptions = {}
-): UseProximityDetectionResult => {
+  spots: AiGeocodedSpot[],
+  options: UseAiProximityDetectionOptions = {}
+): UseAiProximityDetectionResult => {
   const { proximityThreshold = 40 } = options;
-  const [nearbySpot, setNearbySpot] = useState<GeocodedSpot | null>(null);
+  const [nearbySpot, setNearbySpot] = useState<AiGeocodedSpot | null>(null);
   const [shownSpots, setShownSpots] = useState<Set<number>>(new Set());
 
   // Monitor distance to spots and show description when within threshold

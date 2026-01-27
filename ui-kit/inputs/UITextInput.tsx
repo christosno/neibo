@@ -35,6 +35,7 @@ export function UITextInput(props: UITextInputProps) {
     errorMessage,
     keyboardType = "default",
     height,
+    multiline,
     ...rest
   } = props;
   const [isFocused, setIsFocused] = useState(false);
@@ -61,12 +62,17 @@ export function UITextInput(props: UITextInputProps) {
                     ? theme.colors[borderColor]
                     : theme.colors[backroundColor],
                 height: height || styles.input.height,
+                ...(multiline && {
+                  textAlignVertical: "top",
+                  paddingTop: 15,
+                }),
               },
             ]}
             keyboardType={keyboardType}
             placeholder={placeholder}
             placeholderTextColor={theme.colors[placeholderTextColor]}
             cursorColor={theme.colors[placeholderTextColor]}
+            multiline={multiline}
             onFocus={() => {
               setIsFocused(true);
             }}

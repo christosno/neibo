@@ -1,34 +1,36 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { GeocodedSpot } from "./useGeocodeTourSpots";
 import Constants from "expo-constants";
-import polyline from '@mapbox/polyline'; // You'll need to install this: npm install @mapbox/polyline
+import polyline from "@mapbox/polyline";
 
-
-export type  LatitudeLongitudeLiteral = {
+export type LatitudeLongitudeLiteral = {
   latitude: number;
   longitude: number;
-}
+};
+
+type SpotWithCoordinates = {
+  coordinates: LatitudeLongitudeLiteral;
+};
 
 type DirectionsLeg = {
-    steps: {
-      polyline: {
-        points: string; 
-      };
-    }[];
-  }
+  steps: {
+    polyline: {
+      points: string;
+    };
+  }[];
+};
 
 type DirectionsRoute = {
   legs: DirectionsLeg[];
   overview_polyline: {
     points: string;
   };
-}
+};
 
 type DirectionsResponse = {
   routes: DirectionsRoute[];
   status: string;
-}
+};
 
 const directionsUrl = "https://maps.googleapis.com/maps/api/directions/json";
 const apiKey = Constants.expoConfig?.extra?.ROADS_API_KEY as string | undefined;
@@ -44,17 +46,17 @@ const fetchDirections = async (
 
   const originStr = `${origin.latitude},${origin.longitude}`;
   const destinationStr = `${destination.latitude},${destination.longitude}`;
-  
+
   let waypointsStr = "";
   if (waypoints && waypoints.length > 0) {
     const limitedWaypoints = waypoints.slice(0, 23);
     waypointsStr = `&waypoints=${limitedWaypoints
-      .map(w => `${w.latitude},${w.longitude}`)
+      .map((w) => `${w.latitude},${w.longitude}`)
       .join("|")}`;
   }
 
   const url = `${directionsUrl}?origin=${originStr}&destination=${destinationStr}${waypointsStr}&mode=walking&key=${apiKey}`;
-  
+
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -66,22 +68,34 @@ const fetchDirections = async (
 };
 
 const decodePolyline = (encoded: string): LatitudeLongitudeLiteral[] => {
-    const decoded = polyline.decode(encoded);
-    return decoded.map(([lat, lng]: [number, number]) => ({
-      latitude: lat,
-      longitude: lng,
-    }));
-  };
+  const decoded = polyline.decode(encoded);
+  return decoded.map(([lat, lng]: [number, number]) => ({
+    latitude: lat,
+    longitude: lng,
+  }));
+};
 
-export function useCreatePolylines(spots: GeocodedSpot[]) {
-  const { data: directionsResponse, isLoading, error } = useQuery({
-    queryKey: ["directions", spots.map(s => `${s.coordinates.latitude},${s.coordinates.longitude}`).join("|")],
+export function useCreatePolylines<T extends SpotWithCoordinates>(spots: T[]) {
+  const {
+    data: directionsResponse,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: [
+      "directions",
+      spots
+        .map((s) => `${s.coordinates.latitude},${s.coordinates.longitude}`)
+        .join("|"),
+    ],
     queryFn: async () => {
       if (spots.length < 2) return null;
 
       const origin = spots[0].coordinates;
       const destination = spots[spots.length - 1].coordinates;
-      const waypoints = spots.length > 2 ? spots.slice(1, -1).map(s => s.coordinates) : undefined;
+      const waypoints =
+        spots.length > 2
+          ? spots.slice(1, -1).map((s) => s.coordinates)
+          : undefined;
 
       return fetchDirections(origin, destination, waypoints);
     },
@@ -89,7 +103,7 @@ export function useCreatePolylines(spots: GeocodedSpot[]) {
     staleTime: 5 * 60 * 1000,
   });
 
-  const polyline = useMemo(() => {
+  const polylineResult = useMemo(() => {
     if (spots.length < 2) {
       return null;
     }
@@ -112,7 +126,7 @@ export function useCreatePolylines(spots: GeocodedSpot[]) {
   }, [spots, directionsResponse]);
 
   return {
-    polyline,
+    polyline: polylineResult,
     isLoading,
     error,
   };

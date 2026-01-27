@@ -1,12 +1,18 @@
 import { defaultCameraPosition } from "@/constants/defaultPosition";
-import { GeocodedSpot } from "@/hooks/maps/useGeocodeTourSpots";
 import { CameraPosition } from "expo-maps";
+
+type SpotWithCoordinates = {
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+};
 
 /**
  * Calculate camera position to fit all markers
  */
-export const calculateCameraPosition = (
-  spots: GeocodedSpot[]
+export const calculateCameraPosition = <T extends SpotWithCoordinates>(
+  spots: T[]
 ): CameraPosition => {
   if (spots.length === 0) {
     return defaultCameraPosition;
