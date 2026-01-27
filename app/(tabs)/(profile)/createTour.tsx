@@ -405,7 +405,7 @@ export default function CreateTour() {
           onSubmit={handleAddSpot}
           coordinates={selectedCoordinates}
         />
-        <UIVerticalSpacer height={theme.spacing.large + insets.bottom} />
+        <UIVerticalSpacer height={insets.bottom} />
       </UIView>
     );
   }
@@ -633,7 +633,7 @@ export default function CreateTour() {
           Create Tour
         </UIButton>
       </UIView>
-      <UIVerticalSpacer height={theme.spacing.large + insets.bottom} />
+      <UIVerticalSpacer height={insets.bottom} />
     </UIView>
   );
 }
