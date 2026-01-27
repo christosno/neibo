@@ -32,7 +32,7 @@ export default function Home() {
   } = useGetWalks();
 
   const handleTripPress = (walk: Walk) => {
-    console.log("Trip pressed:", walk.id);
+    router.push(`/walk/${walk.id}`);
   };
 
   const handleEndReached = () => {

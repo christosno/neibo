@@ -6,7 +6,7 @@ import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermiss
 import { GoogleMapsComponent } from "@/components/GoogleMapsComponent";
 import { AppleMapsComponent } from "@/components/AppleMapsComponent";
 
-export default function Trip() {
+export default function AiTrip() {
   const tourData = useAiTourStore((state) => {
     return state.tourData;
   });
