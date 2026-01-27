@@ -18,6 +18,7 @@ type UITextInputProps = ComponentProps<typeof TextInput> & {
   borderColor?: UIThemeColor;
   hasError?: boolean;
   errorMessage?: string;
+  height?: number;
 };
 
 export function UITextInput(props: UITextInputProps) {
@@ -32,6 +33,8 @@ export function UITextInput(props: UITextInputProps) {
     borderColor = "yellow",
     hasError = false,
     errorMessage,
+    keyboardType = "default",
+    height,
     ...rest
   } = props;
   const [isFocused, setIsFocused] = useState(false);
@@ -57,8 +60,10 @@ export function UITextInput(props: UITextInputProps) {
                   : isFocused
                     ? theme.colors[borderColor]
                     : theme.colors[backroundColor],
+                height: height || styles.input.height,
               },
             ]}
+            keyboardType={keyboardType}
             placeholder={placeholder}
             placeholderTextColor={theme.colors[placeholderTextColor]}
             cursorColor={theme.colors[placeholderTextColor]}
@@ -70,7 +75,7 @@ export function UITextInput(props: UITextInputProps) {
               setIsFocused(false);
             }}
             value={value}
-            onChangeText={onChange}
+            onChangeText={(text) => onChange(keyboardType === "numeric" ? Number(text) : text)}
             {...rest}
           />
         )}

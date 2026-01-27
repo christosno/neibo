@@ -1,6 +1,7 @@
 export const theme = {
   colors: {
     white: "#fff",
+    gray: "#374151",
     black: "#000",
     slateLight: "#94a3b8",
     green: "#14532d",
@@ -34,6 +35,7 @@ export const theme = {
     medium: 12,
     large: 22,
     xLarge: 42,
+    xxLarge: 82,
   },
   fontFamily: {
     caveat: "Caveat_400Regular",

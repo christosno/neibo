@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GenerateAiTourResponse } from "../generate-tour-with-ai/generate-ai-tour";
 import { geocodeAddress } from "@/utils/location";
 
@@ -12,8 +12,6 @@ export type GeocodedSpot = {
   description: string;
   search_query: string;
   full_address: string;
-  latitude: number;
-  longitude: number;
   positionOrder: number;
   coordinates: GeocodedSpotCoordinates;
 };
@@ -49,34 +47,24 @@ export const useGeocodeTourSpots = (
 
         // Process spots sequentially to avoid rate limiting
         for (const spot of tourData.spots) {
-          let latitude: number | null | undefined;
-          let longitude: number | null | undefined;
-
           const coordinates = await geocodeAddress(
             spot.full_address,
             spot.search_query
           );
 
           if (coordinates && coordinates.latitude && coordinates.longitude) {
-            latitude = coordinates.latitude;
-            longitude = coordinates.longitude;
+            geocodedResults.push({
+              ...spot,
+              coordinates: {
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+              },
+            });
           } else {
             console.warn(
               `❌ Failed to geocode spot ${spot.positionOrder}: "${spot.title}"`
             );
             continue;
-          }
-
-          if (typeof latitude === "number" && typeof longitude === "number") {
-            geocodedResults.push({
-              ...spot,
-              latitude,
-              longitude,
-              coordinates: {
-                latitude,
-                longitude,
-              },
-            });
           }
         }
 
@@ -94,5 +82,10 @@ export const useGeocodeTourSpots = (
     geocodeSpots();
   }, [tourData]);
 
-  return { geocodedSpots, isLoading, error };
+  // Sort spots by positionOrder to ensure correct route order
+  const sortedSpots = useMemo(() => {
+    return [...geocodedSpots].sort((a, b) => a.positionOrder - b.positionOrder);
+  }, [geocodedSpots]);
+
+  return { geocodedSpots: sortedSpots, isLoading, error };
 };

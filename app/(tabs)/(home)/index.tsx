@@ -1,157 +1,146 @@
-import { UIButton } from "@/ui-kit/buttons/UIButton";
-import { UIView } from "@/ui-kit/layout/UIView";
-import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
-import { Notification } from "@/ui-kit/feedback/Notification";
-import { UITextInput } from "@/ui-kit/inputs/UITextInput";
-import { UISelect } from "@/ui-kit/inputs/UISelect";
-import { UIText } from "@/ui-kit/typography/UIText";
-import { Controller } from "react-hook-form";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { StyleSheet } from "react-native";
-import { theme } from "@/theme";
-import { useTourForm, TOUR_THEMES, TourFormData } from "./useTourForm";
-import { useGenerateTourWithAi } from "@/hooks/generate-tour-with-ai/useGenerateTourWithAi";
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
+import { UIView } from "@/ui-kit/layout/UIView";
+import { UIText } from "@/ui-kit/typography/UIText";
+import { UIDotsLoader } from "@/ui-kit/feedback/UIDotsLoader";
+import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
+import { UIButton } from "@/ui-kit/buttons/UIButton";
+import { Notification } from "@/ui-kit/feedback/Notification";
+import { TripCard } from "@/components/TripCard";
+import { theme } from "@/theme";
+import { useGetWalks } from "@/hooks/walks/useGetWalks";
+import type { Walk } from "@/services/tours/get-walks";
+
 export default function Home() {
+  const insets = useSafeAreaInsets();
   const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useTourForm();
+    walks,
+    isLoading,
+    isFetchingNextPage,
+    isError,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetWalks();
 
-  const { generateTour, error, isPending } = useGenerateTourWithAi();
+  const handleTripPress = (walk: Walk) => {
+    console.log("Trip pressed:", walk.id);
+  };
 
-  const onSubmit = async (formData: TourFormData) => {
-    console.log("Form submitted:", formData);
-    try {
-      await generateTour(formData);
-      reset();
-      router.push("/trip");
-    } catch (error) {
-      console.log("👉 ~ onSubmit ~ error:", error);
+  const handleEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   };
 
+  const renderHeader = () => (
+    <UIView paddingHorizontal="large" paddingTop="large" paddingBottom="medium">
+      <UIText size="large" align="left" color="yellow">
+        Discover Tours
+      </UIText>
+    </UIView>
+  );
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <UIView padding="large" mainAxis="center" crossAxis="center">
+        <ActivityIndicator color={theme.colors.yellow} />
+      </UIView>
+    );
+  };
+
+  const renderEmptyList = () => (
+    <UIView padding="large" mainAxis="center" crossAxis="center">
+      <UIText color="slateLight" align="center">
+        No tours available yet.
+      </UIText>
+      <UIVerticalSpacer height={theme.spacing.medium} />
+      <UIText color="slateLight" size="small" align="center">
+        Be the first to create one!
+      </UIText>
+    </UIView>
+  );
+
+  if (isLoading) {
+    return (
+      <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
+        <UIDotsLoader />
+        <UIVerticalSpacer height={theme.spacing.medium} />
+        <UIText color="slateLight">Loading tours...</UIText>
+      </UIView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
+        <Notification
+          title="Error"
+          message={error?.message || "Failed to load tours"}
+          type="error"
+        />
+        <UIVerticalSpacer height={theme.spacing.large} />
+        <UIButton variant="outlined" onPress={() => refetch()}>
+          Try Again
+        </UIButton>
+      </UIView>
+    );
+  }
+
   return (
     <UIView expanded color="slateDark">
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.scrollContent}
-        enableOnAndroid={true}
-        extraScrollHeight={100}
+      <UIView
+        paddingHorizontal="large"
+        paddingTop="large"
+        paddingBottom="medium"
       >
-        <UIView paddingHorizontal="large" paddingTop="large">
-          <UIText size="large" align="left" color="yellow">
-            Create Your Tour
-          </UIText>
-          <UIVerticalSpacer height={theme.spacing.large} />
+        <UIButton variant="outlined" onPress={() => router.push("/ai-tour")}>
+          Create a Tour with AI
+        </UIButton>
+      </UIView>
 
-          <UITextInput
-            label="City *"
-            control={control}
-            name="city"
-            placeholder="City"
-            hasError={!!errors.city}
-            errorMessage={errors.city?.message}
+      <FlatList
+        style={{ flex: 1 }}
+        data={walks}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <UIView paddingHorizontal="large">
+            <TripCard walk={item} onPress={() => handleTripPress(item)} />
+          </UIView>
+        )}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmptyList}
+        contentContainerStyle={[
+          styles.listContent,
+          { paddingBottom: insets.bottom + theme.spacing.xxLarge },
+        ]}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={refetch}
+            tintColor={theme.colors.yellow}
           />
-
-          <UIVerticalSpacer height={theme.spacing.medium} />
-
-          <UITextInput
-            label="Neighborhood"
-            control={control}
-            name="neighborhood"
-            placeholder="Neighborhood"
-            hasError={!!errors.neighborhood}
-            errorMessage={errors.neighborhood?.message}
-          />
-
-          <UIVerticalSpacer height={theme.spacing.medium} />
-
-          <UITextInput
-            label="Tour Duration"
-            control={control}
-            name="duration"
-            placeholder={"Duration in minutes"}
-            hasError={!!errors.duration}
-            errorMessage={errors.duration?.message}
-          />
-
-          <UIVerticalSpacer height={theme.spacing.medium} />
-
-          <Controller
-            control={control}
-            name="tourTheme"
-            render={({ field: { onChange, value } }) => (
-              <UISelect
-                label="Tour Theme / Style *"
-                placeholder="Tour Theme / Style *"
-                value={value}
-                onChange={onChange}
-                options={TOUR_THEMES.map((theme) => ({
-                  label: theme,
-                  value: theme,
-                }))}
-                error={errors.tourTheme?.message}
-              />
-            )}
-          />
-          <UIVerticalSpacer height={theme.spacing.medium} />
-
-          <UITextInput
-            label="Start Location"
-            control={control}
-            name="startLocation"
-            placeholder="Start Location (optional, e.g., Plaça de Catalunya)"
-            hasError={!!errors.startLocation}
-            errorMessage={errors.startLocation?.message}
-          />
-
-          <UIVerticalSpacer height={theme.spacing.medium} />
-
-          <UITextInput
-            label="Language"
-            control={control}
-            name="language"
-            placeholder="Language (optional, e.g., English)"
-            hasError={!!errors.language}
-            errorMessage={errors.language?.message}
-          />
-
-          <UIVerticalSpacer height={theme.spacing.xLarge} />
-
-          {error && (
-            <>
-              <Notification
-                title="Error"
-                message={error?.message || "An unexpected error occurred"}
-                type="error"
-              />
-              <UIVerticalSpacer height={theme.spacing.xLarge} />
-            </>
-          )}
-
-          {/* Submit Button */}
-          <UIView.Animated linearTransition>
-            <UIButton
-              isLoading={isPending}
-              variant="outlined"
-              extended
-              onPress={handleSubmit(onSubmit)}
-            >
-              Generate Tour
-            </UIButton>
-          </UIView.Animated>
-          <UIVerticalSpacer height={theme.spacing.large} />
-        </UIView>
-      </KeyboardAwareScrollView>
+        }
+        showsVerticalScrollIndicator={false}
+      />
     </UIView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContent: {
+  listContent: {
     flexGrow: 1,
   },
 });
