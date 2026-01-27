@@ -1,8 +1,18 @@
 import { useMemo } from "react";
 import type { WalkSpot } from "@/services/tours/get-walk-by-id";
-import type { GeocodedSpot } from "./useGeocodeTourSpots";
 
-export type WalkGeocodedSpot = GeocodedSpot & {
+export type WalkGeocodedSpotCoordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+export type WalkGeocodedSpot = {
+  title: string;
+  description: string;
+  search_query: string;
+  full_address: string;
+  positionOrder: number;
+  coordinates: WalkGeocodedSpotCoordinates;
   reach_radius: number;
   imageUrls: string[];
   audioUrl: string;

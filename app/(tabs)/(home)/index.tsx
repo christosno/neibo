@@ -103,7 +103,7 @@ export default function Home() {
         paddingTop="large"
         paddingBottom="medium"
       >
-        <UIButton variant="outlined" onPress={() => router.push("/ai-tour")}>
+        <UIButton variant="outlined" onPress={() => router.push("/(aiTour)")}>
           Create a Tour with AI
         </UIButton>
       </UIView>

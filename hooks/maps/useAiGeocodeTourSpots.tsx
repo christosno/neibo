@@ -2,33 +2,33 @@ import { useState, useEffect, useMemo } from "react";
 import { GenerateAiTourResponse } from "../generate-tour-with-ai/generate-ai-tour";
 import { geocodeAddress } from "@/utils/location";
 
-export type GeocodedSpotCoordinates = {
+export type AiGeocodedSpotCoordinates = {
   latitude: number;
   longitude: number;
 };
 
-export type GeocodedSpot = {
+export type AiGeocodedSpot = {
   title: string;
   description: string;
   search_query: string;
   full_address: string;
   positionOrder: number;
-  coordinates: GeocodedSpotCoordinates;
+  coordinates: AiGeocodedSpotCoordinates;
 };
 
-type UseGeocodeTourSpotsResult = {
-  geocodedSpots: GeocodedSpot[];
+type UseAiGeocodeTourSpotsResult = {
+  geocodedSpots: AiGeocodedSpot[];
   isLoading: boolean;
   error: string | null;
 };
 
 /**
- * Hook to geocode all tour spots that don't have coordinates
+ * Hook to geocode all AI tour spots that don't have coordinates
  */
-export const useGeocodeTourSpots = (
+export const useAiGeocodeTourSpots = (
   tourData: GenerateAiTourResponse | null
-): UseGeocodeTourSpotsResult => {
-  const [geocodedSpots, setGeocodedSpots] = useState<GeocodedSpot[]>([]);
+): UseAiGeocodeTourSpotsResult => {
+  const [geocodedSpots, setGeocodedSpots] = useState<AiGeocodedSpot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +43,7 @@ export const useGeocodeTourSpots = (
       setError(null);
 
       try {
-        const geocodedResults: GeocodedSpot[] = [];
+        const geocodedResults: AiGeocodedSpot[] = [];
 
         // Process spots sequentially to avoid rate limiting
         for (const spot of tourData.spots) {

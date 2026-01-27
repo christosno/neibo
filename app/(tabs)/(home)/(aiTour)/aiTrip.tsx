@@ -3,8 +3,8 @@ import { useAiTourStore } from "@/hooks/useAiTourStore";
 import { UIView } from "@/ui-kit/layout/UIView";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermissions";
-import { GoogleMapsComponent } from "@/components/GoogleMapsComponent";
-import { AppleMapsComponent } from "@/components/AppleMapsComponent";
+import { AiGoogleMapsComponent } from "@/components/AiGoogleMapsComponent";
+import { AiAppleMapsComponent } from "@/components/AiAppleMapsComponent";
 
 export default function AiTrip() {
   const tourData = useAiTourStore((state) => {
@@ -25,8 +25,8 @@ export default function AiTrip() {
   }
 
   return Platform.OS === "android" ? (
-    <GoogleMapsComponent />
+    <AiGoogleMapsComponent />
   ) : (
-    <AppleMapsComponent />
+    <AiAppleMapsComponent />
   );
 }

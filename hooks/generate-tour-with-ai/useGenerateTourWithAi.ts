@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { generateAiTour } from "./generate-ai-tour";
-import { TourFormData } from "@/app/(tabs)/(home)/useTourForm";
+import { TourFormData } from "@/hooks/generate-tour-with-ai/useTourForm";
 import { useAiTourStore } from "../useAiTourStore";
 
 export const useGenerateTourWithAi = () => {
