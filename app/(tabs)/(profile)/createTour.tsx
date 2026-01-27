@@ -34,10 +34,108 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type WizardStep = "info" | "spots" | "summary";
 
+const STEPS: { key: WizardStep; label: string }[] = [
+  { key: "info", label: "Info" },
+  { key: "spots", label: "Spots" },
+  { key: "summary", label: "Review" },
+];
+
+type StepperProps = {
+  currentStep: WizardStep;
+  onStepPress: (step: WizardStep) => void;
+  invalidSteps: WizardStep[];
+};
+
+function Stepper({ currentStep, onStepPress, invalidSteps }: StepperProps) {
+  const currentIndex = STEPS.findIndex((s) => s.key === currentStep);
+
+  return (
+    <UIView row mainAxis="center" crossAxis="center" padding="medium" gap="small">
+      {STEPS.map((step, index) => {
+        const isActive = step.key === currentStep;
+        const isCompleted = index < currentIndex;
+        const hasError = invalidSteps.includes(step.key);
+
+        // Determine circle style
+        const getCircleStyle = () => {
+          if (hasError) return styles.stepCircleError;
+          if (isActive) return styles.stepCircleActive;
+          if (isCompleted) return styles.stepCircleCompleted;
+          return null;
+        };
+
+        // Determine icon/content
+        const renderStepContent = () => {
+          if (hasError) {
+            return (
+              <Ionicons name="help" size={16} color={theme.colors.white} />
+            );
+          }
+          if (isCompleted) {
+            return (
+              <Ionicons name="checkmark" size={14} color={theme.colors.slateDark} />
+            );
+          }
+          return (
+            <UIText
+              size="small"
+              color={isActive ? "slateDark" : "slateLight"}
+              style={{ fontWeight: "600" }}
+            >
+              {index + 1}
+            </UIText>
+          );
+        };
+
+        // Determine label color
+        const getLabelColor = () => {
+          if (hasError) return "error";
+          if (isActive) return "yellow";
+          return "slateLight";
+        };
+
+        return (
+          <UIView key={step.key} row crossAxis="center">
+            <Pressable
+              onPress={() => onStepPress(step.key)}
+              style={styles.stepContainer}
+            >
+              <UIView
+                style={[styles.stepCircle, getCircleStyle()]}
+                mainAxis="center"
+                crossAxis="center"
+              >
+                {renderStepContent()}
+              </UIView>
+              <UIText
+                size="small"
+                color={getLabelColor()}
+                style={[styles.stepLabel, isActive && styles.stepLabelActive]}
+              >
+                {step.label}
+              </UIText>
+            </Pressable>
+            {index < STEPS.length - 1 && (
+              <UIView
+                style={[
+                  styles.stepConnector,
+                  isCompleted && !hasError && styles.stepConnectorCompleted,
+                  hasError && styles.stepConnectorError,
+                ]}
+              />
+            )}
+          </UIView>
+        );
+      })}
+    </UIView>
+  );
+}
+
 export default function CreateTour() {
   const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState<WizardStep>("info");
+  const [invalidSteps, setInvalidSteps] = useState<WizardStep[]>([]);
   const [spotModalVisible, setSpotModalVisible] = useState(false);
   const [selectedCoordinates, setSelectedCoordinates] = useState<{
     latitude: number;
@@ -100,22 +198,47 @@ export default function CreateTour() {
       shouldFocus: true,
     });
     if (isValid) {
+      clearInvalidStep("info");
       setStep("spots");
     }
   };
 
   const handleNextToSummary = () => {
     if (spots.length > 0) {
+      clearInvalidStep("spots");
       setStep("summary");
     }
   };
 
-  const handleBackToInfo = () => {
-    setStep("info");
+  const handleStepPress = async (targetStep: WizardStep) => {
+    const targetIndex = STEPS.findIndex((s) => s.key === targetStep);
+    const newInvalidSteps: WizardStep[] = [];
+
+    // Validate all steps before the target step
+    for (let i = 0; i < targetIndex; i++) {
+      const stepKey = STEPS[i].key;
+
+      if (stepKey === "info") {
+        // Validate info step (name and description required)
+        const isValid = await trigger(["name", "description"]);
+        if (!isValid) {
+          newInvalidSteps.push("info");
+        }
+      } else if (stepKey === "spots") {
+        // Validate spots step (at least one spot required)
+        if (spots.length === 0) {
+          newInvalidSteps.push("spots");
+        }
+      }
+    }
+
+    setInvalidSteps(newInvalidSteps);
+    setStep(targetStep);
   };
 
-  const handleBackToSpots = () => {
-    setStep("spots");
+  // Clear invalid state for a step when it becomes valid
+  const clearInvalidStep = (stepKey: WizardStep) => {
+    setInvalidSteps((prev) => prev.filter((s) => s !== stepKey));
   };
 
   const onSubmit = async (formData: CreateTourFormData) => {
@@ -150,12 +273,13 @@ export default function CreateTour() {
   if (step === "info") {
     return (
       <UIView expanded color="slateDark">
+        <Stepper currentStep={step} onStepPress={handleStepPress} invalidSteps={invalidSteps} />
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scrollContent}
           enableOnAndroid={true}
           extraScrollHeight={100}
         >
-          <UIView paddingHorizontal="large" paddingTop="large">
+          <UIView paddingHorizontal="large" paddingTop="medium">
             <UIText size="large" align="left" color="yellow">
               Tour Information
             </UIText>
@@ -280,30 +404,18 @@ export default function CreateTour() {
   if (step === "spots") {
     return (
       <UIView expanded color="slateDark">
-        {/* Header with back button */}
-        <UIView
-          row
-          padding="medium"
-          crossAxis="center"
-          mainAxis="space-between"
-          color="slateDark"
-        >
-          <Pressable onPress={handleBackToInfo} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.yellow} />
-            <UIText color="yellow" size="medium">
-              Back
-            </UIText>
-          </Pressable>
-          <UIText color="yellow" size="medium">
-            {spots.length} spot{spots.length !== 1 ? "s" : ""} added
-          </UIText>
-        </UIView>
+        <Stepper currentStep={step} onStepPress={handleStepPress} invalidSteps={invalidSteps} />
 
         {/* Instructions */}
         <UIView padding="medium" color="slate">
-          <UIText color="slateLight" size="small" align="center">
-            Tap on the map to add spots to your tour
-          </UIText>
+          <UIView row mainAxis="space-between" crossAxis="center">
+            <UIText color="slateLight" size="small">
+              Tap on the map to add spots
+            </UIText>
+            <UIText color="yellow" size="small">
+              {spots.length} spot{spots.length !== 1 ? "s" : ""} added
+            </UIText>
+          </UIView>
         </UIView>
 
         {/* Map */}
@@ -413,24 +525,7 @@ export default function CreateTour() {
   // Step 3: Summary
   return (
     <UIView expanded color="slateDark">
-      {/* Header with back button */}
-      <UIView
-        row
-        padding="medium"
-        crossAxis="center"
-        mainAxis="space-between"
-        color="slateDark"
-      >
-        <Pressable onPress={handleBackToSpots} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={theme.colors.yellow} />
-          <UIText color="yellow" size="medium">
-            Back
-          </UIText>
-        </Pressable>
-        <UIText color="yellow" size="medium">
-          Review Tour
-        </UIText>
-      </UIView>
+      <Stepper currentStep={step} onStepPress={handleStepPress} invalidSteps={invalidSteps} />
 
       <ScrollView
         contentContainerStyle={[
@@ -645,11 +740,6 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
   spotsListContainer: {
     maxHeight: 100,
     backgroundColor: theme.colors.slateDark,
@@ -675,5 +765,48 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
+  },
+  // Stepper styles
+  stepContainer: {
+    alignItems: "center",
+    paddingHorizontal: theme.spacing.small,
+  },
+  stepCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: theme.colors.slate,
+    borderWidth: 2,
+    borderColor: theme.colors.slateLight,
+  },
+  stepCircleActive: {
+    backgroundColor: theme.colors.yellow,
+    borderColor: theme.colors.yellow,
+  },
+  stepCircleCompleted: {
+    backgroundColor: theme.colors.yellow,
+    borderColor: theme.colors.yellow,
+  },
+  stepCircleError: {
+    backgroundColor: theme.colors.error,
+    borderColor: theme.colors.error,
+  },
+  stepLabel: {
+    marginTop: 4,
+  },
+  stepLabelActive: {
+    fontWeight: "600",
+  },
+  stepConnector: {
+    width: 24,
+    height: 2,
+    backgroundColor: theme.colors.slate,
+    marginBottom: 18,
+  },
+  stepConnectorCompleted: {
+    backgroundColor: theme.colors.yellow,
+  },
+  stepConnectorError: {
+    backgroundColor: theme.colors.error,
   },
 });
