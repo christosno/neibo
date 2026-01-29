@@ -10,6 +10,7 @@ type Auth = {
   signUp: (email: string, password: string, username: string) => void;
   logout: () => void;
   continueAsGuest: () => void;
+  setIsGuest: (isGuest: boolean) => void;
   isGuest: boolean;
   isAuthenticated: boolean;
 };
@@ -60,5 +61,8 @@ export const useAuth = create<Auth>((set) => ({
   },
   continueAsGuest: () => {
     set({ user: null, error: null, isGuest: true, isAuthenticated: false });
+  },
+  setIsGuest: (isGuest: boolean) => {
+    set({ isGuest });
   },
 }));
