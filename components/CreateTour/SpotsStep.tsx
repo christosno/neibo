@@ -14,6 +14,7 @@ import { type SpotFormData } from "@/hooks/create-tour/useCreateTourForm";
 import { SpotFormModal } from "./SpotFormModal";
 import { Stepper } from "./Stepper";
 import { WizardStep } from "./types";
+import { AddressSearchInput } from "./AddressSearchInput";
 
 type SpotsStepProps = {
   spots: SpotFormData[];
@@ -35,12 +36,36 @@ export function SpotsStep({
   onNext,
 }: SpotsStepProps) {
   const insets = useSafeAreaInsets();
-  const mapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
+  const appleMapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
+  const googleMapRef = useRef<ComponentRef<typeof GoogleMaps.View>>(null);
   const [spotModalVisible, setSpotModalVisible] = useState(false);
   const [selectedCoordinates, setSelectedCoordinates] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
+  const [cameraPosition, setCameraPosition] = useState(defaultCameraPosition);
+
+  const handleAddressSelected = (place: {
+    latitude: number;
+    longitude: number;
+    description: string;
+  }) => {
+    // Update camera position state (map will re-render with new position)
+    setCameraPosition({
+      coordinates: {
+        latitude: place.latitude,
+        longitude: place.longitude,
+      },
+      zoom: 16,
+    });
+
+    // Select as spot and open the form
+    setSelectedCoordinates({
+      latitude: place.latitude,
+      longitude: place.longitude,
+    });
+    setSpotModalVisible(true);
+  };
 
   const handleMapPress = (event: { coordinates: Coordinates }) => {
     const { latitude, longitude } = event.coordinates;
@@ -97,18 +122,20 @@ export function SpotsStep({
 
       {/* Map */}
       <UIView expanded>
+        <AddressSearchInput onPlaceSelected={handleAddressSelected} />
         {Platform.OS === "ios" ? (
           <AppleMaps.View
-            ref={mapRef}
+            ref={appleMapRef}
             style={styles.map}
-            cameraPosition={defaultCameraPosition}
+            cameraPosition={cameraPosition}
             markers={markers}
             onMapClick={handleMapPress}
           />
         ) : (
           <GoogleMaps.View
+            ref={googleMapRef}
             style={styles.map}
-            cameraPosition={defaultCameraPosition}
+            cameraPosition={cameraPosition}
             markers={markers}
             onMapClick={handleMapPress}
           />
