@@ -89,7 +89,7 @@ export function SpotFormModal({
           onPress={(e) => e.stopPropagation()}
         >
           <ScrollView showsVerticalScrollIndicator={false}>
-            <UIView gap="medium" padding="large">
+            <UIView gap="medium" padding="large" paddingBottom="xxLarge">
               <UIView row mainAxis="space-between" crossAxis="center">
                 <UIText size="large" color="yellow" align="left" expanded>
                   Add Spot
@@ -100,11 +100,7 @@ export function SpotFormModal({
               </UIView>
 
               {coordinates && (
-                <UIView
-                  color="slate"
-                  padding="medium"
-                  borderRadius="medium"
-                >
+                <UIView color="slate" padding="medium" borderRadius="medium">
                   <UIText size="small" color="slateLight" align="left">
                     Location: {coordinates.latitude.toFixed(6)},{" "}
                     {coordinates.longitude.toFixed(6)}
