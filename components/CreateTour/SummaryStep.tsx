@@ -244,7 +244,6 @@ export function SummaryStep({
           Create Tour
         </UIButton>
       </UIView>
-      <UIVerticalSpacer height={insets.bottom} />
     </UIView>
   );
 }
