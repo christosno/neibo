@@ -107,7 +107,7 @@ export default function CreateTour() {
       reset();
       setStep("info");
       setInvalidSteps([]);
-      queryClient.invalidateQueries({ queryKey: ["walks"] });
+      queryClient.invalidateQueries({ queryKey: ["tours"] });
       // First go back to profile index to clear the stack
       router.back();
       // Then navigate to home

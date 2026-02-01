@@ -1,9 +1,8 @@
 import { useAuth } from "@/authentication/useAuth";
 import { ProfileMenuItem } from "@/components/ProfileMenuItem";
+import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { UIView } from "@/ui-kit/layout/UIView";
 import { UIText } from "@/ui-kit/typography/UIText";
-import { theme } from "@/theme";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 export default function Profile() {
@@ -22,16 +21,11 @@ export default function Profile() {
       style={{ height: "100%" }}
       mainAxis="flex-start"
       crossAxis="stretch"
-      gap="medium"
+      gap="large"
     >
       <UIView crossAxis="center" gap="small" paddingVertical="medium">
-        <Ionicons
-          name="person-circle"
-          size={80}
-          color={theme.colors.slateLight}
-        />
         <UIText size="large" color="slateLight">
-          {isAuthenticated && user?.username ? user.username : "Guest"}
+          Hello {isAuthenticated && user?.username ? user.username : "Guest"}
         </UIText>
       </UIView>
 
@@ -45,11 +39,13 @@ export default function Profile() {
             />
             <ProfileMenuItem
               icon="walk-outline"
-              label="See all my walks"
-              onPress={() => {}}
+              label="See all my tours"
+              onPress={() => router.push("/(profile)/myTours")}
             />
           </>
         )}
+
+        <UIVerticalSpacer height={25} />
 
         {isAuthenticated ? (
           <ProfileMenuItem

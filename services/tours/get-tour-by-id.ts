@@ -1,8 +1,8 @@
 import { http } from "../http/http";
 
-export type WalkSpot = {
+export type TourSpot = {
   id: string;
-  walkId: string;
+  tourId: string;
   title: string;
   description: string;
   latitude: string;
@@ -15,13 +15,13 @@ export type WalkSpot = {
   updatedAt: string;
 };
 
-export type WalkAuthor = {
+export type TourAuthor = {
   id: string;
   username: string;
   profilePicture: string;
 };
 
-export type WalkDetail = {
+export type TourDetail = {
   id: string;
   authorId: string;
   name: string;
@@ -32,19 +32,19 @@ export type WalkDetail = {
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
-  spots: WalkSpot[];
-  author: WalkAuthor;
+  spots: TourSpot[];
+  author: TourAuthor;
   walkTags: string[];
 };
 
-type GetWalkByIdResponse = {
+type GetTourByIdResponse = {
   message: string;
-  data: WalkDetail;
+  data: TourDetail;
 };
 
-const isGetWalkByIdResponse = (input: unknown): input is GetWalkByIdResponse => {
+const isGetTourByIdResponse = (input: unknown): input is GetTourByIdResponse => {
   if (!input || typeof input !== "object") return false;
-  const response = input as GetWalkByIdResponse;
+  const response = input as GetTourByIdResponse;
   return (
     typeof response.message === "string" &&
     response.data !== null &&
@@ -54,10 +54,10 @@ const isGetWalkByIdResponse = (input: unknown): input is GetWalkByIdResponse => 
   );
 };
 
-export const getWalkById = (id: string) => {
-  return http.basic<GetWalkByIdResponse>({
+export const getTourById = (id: string) => {
+  return http.basic<GetTourByIdResponse>({
     url: `/walks/${id}`,
     method: "GET",
-    validator: isGetWalkByIdResponse,
+    validator: isGetTourByIdResponse,
   });
 };

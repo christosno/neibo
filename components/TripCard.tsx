@@ -3,14 +3,14 @@ import { UIView } from "@/ui-kit/layout/UIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { theme } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
-import type { Walk } from "@/services/tours/get-walks";
+import type { Tour } from "@/services/tours/get-tours";
 
 type TripCardProps = {
-  walk: Walk;
+  tour: Tour;
   onPress?: () => void;
 };
 
-export function TripCard({ walk, onPress }: TripCardProps) {
+export function TripCard({ tour, onPress }: TripCardProps) {
   const formatDuration = (minutes?: number | string) => {
     if (minutes === undefined || minutes === null) return null;
     const mins = typeof minutes === "string" ? parseFloat(minutes) : minutes;
@@ -33,9 +33,9 @@ export function TripCard({ walk, onPress }: TripCardProps) {
   return (
     <UIView.Pressable onPress={onPress} style={styles.container}>
       <UIView color="slate" borderRadius="large" style={styles.card}>
-        {walk.coverImageUrl && walk.coverImageUrl.length > 0 ? (
+        {tour.coverImageUrl && tour.coverImageUrl.length > 0 ? (
           <Image
-            source={{ uri: walk.coverImageUrl }}
+            source={{ uri: tour.coverImageUrl }}
             style={styles.coverImage}
             resizeMode="cover"
           />
@@ -51,22 +51,22 @@ export function TripCard({ walk, onPress }: TripCardProps) {
 
         <UIView padding="medium" gap="small">
           <UIText size="medium" color="yellow" align="left" numberOfLines={1}>
-            {walk.name}
+            {tour.name}
           </UIText>
 
-          {walk.description && (
+          {tour.description && (
             <UIText
               size="small"
               color="slateLight"
               align="left"
               numberOfLines={2}
             >
-              {walk.description}
+              {tour.description}
             </UIText>
           )}
 
           <UIView row gap="medium" style={styles.metaContainer}>
-            {walk.duration_estimate && (
+            {tour.duration_estimate && (
               <UIView row crossAxis="center" gap="tiny">
                 <Ionicons
                   name="time-outline"
@@ -74,12 +74,12 @@ export function TripCard({ walk, onPress }: TripCardProps) {
                   color={theme.colors.slateLight}
                 />
                 <UIText size="small" color="slateLight">
-                  {formatDuration(walk.duration_estimate)}
+                  {formatDuration(tour.duration_estimate)}
                 </UIText>
               </UIView>
             )}
 
-            {walk.distance_estimate && (
+            {tour.distance_estimate && (
               <UIView row crossAxis="center" gap="tiny">
                 <Ionicons
                   name="walk-outline"
@@ -87,20 +87,20 @@ export function TripCard({ walk, onPress }: TripCardProps) {
                   color={theme.colors.slateLight}
                 />
                 <UIText size="small" color="slateLight">
-                  {formatDistance(walk.distance_estimate)}
+                  {formatDistance(tour.distance_estimate)}
                 </UIText>
               </UIView>
             )}
 
-            {walk.isPublic !== undefined && walk.isPublic !== null && (
+            {tour.isPublic !== undefined && tour.isPublic !== null && (
               <UIView row crossAxis="center" gap="tiny">
                 <Ionicons
-                  name={walk.isPublic ? "globe-outline" : "lock-closed-outline"}
+                  name={tour.isPublic ? "globe-outline" : "lock-closed-outline"}
                   size={14}
                   color={theme.colors.slateLight}
                 />
                 <UIText size="small" color="slateLight">
-                  {walk.isPublic ? "Public" : "Private"}
+                  {tour.isPublic ? "Public" : "Private"}
                 </UIText>
               </UIView>
             )}

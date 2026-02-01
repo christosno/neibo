@@ -7,16 +7,17 @@ import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { useRequestLocationPermissions } from "@/hooks/useRequestLocationPermissions";
-import { useGetWalkById } from "@/hooks/walks/useGetWalkById";
-import { useWalkSpots } from "@/hooks/maps/useWalkSpots";
-import { WalkGoogleMapsComponent } from "@/components/WalkGoogleMapsComponent";
-import { WalkAppleMapsComponent } from "@/components/WalkAppleMapsComponent";
-import { theme } from "@/theme";
 
-export default function WalkScreen() {
+import { useTourSpots } from "@/hooks/maps/useTourSpots";
+import { TourGoogleMapsComponent } from "@/components/TourGoogleMapsComponent";
+import { TourAppleMapsComponent } from "@/components/TourAppleMapsComponent";
+import { theme } from "@/theme";
+import { useGetTourById } from "@/hooks/tours/useGetTourById";
+
+export default function TourScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { walk, isLoading, isError, error, refetch } = useGetWalkById(id);
-  const spots = useWalkSpots(walk?.spots);
+  const { tour, isLoading, isError, error, refetch } = useGetTourById(id);
+  const spots = useTourSpots(tour?.spots);
 
   useRequestLocationPermissions();
 
@@ -46,21 +47,17 @@ export default function WalkScreen() {
     );
   }
 
-  if (!walk) {
+  if (!tour) {
     return (
       <UIView expanded color="slateDark" mainAxis="center" crossAxis="center">
-        <Notification
-          title="Error"
-          message="Tour not found"
-          type="error"
-        />
+        <Notification title="Error" message="Tour not found" type="error" />
       </UIView>
     );
   }
 
   return Platform.OS === "android" ? (
-    <WalkGoogleMapsComponent spots={spots} />
+    <TourGoogleMapsComponent spots={spots} />
   ) : (
-    <WalkAppleMapsComponent spots={spots} />
+    <TourAppleMapsComponent spots={spots} />
   );
 }

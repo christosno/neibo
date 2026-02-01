@@ -15,13 +15,13 @@ import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { TripCard } from "@/components/TripCard";
 import { theme } from "@/theme";
-import { useGetWalks } from "@/hooks/walks/useGetWalks";
-import type { Walk } from "@/services/tours/get-walks";
+import { useGetTours } from "@/hooks/tours/useGetTours";
+import type { Tour } from "@/services/tours/get-tours";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
   const {
-    walks,
+    tours,
     isLoading,
     isFetchingNextPage,
     isError,
@@ -29,10 +29,10 @@ export default function Home() {
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useGetWalks();
+  } = useGetTours();
 
-  const handleTripPress = (walk: Walk) => {
-    router.push(`/tour/${walk.id}`);
+  const handleTripPress = (tour: Tour) => {
+    router.push(`/tour/${tour.id}`);
   };
 
   const handleEndReached = () => {
@@ -110,11 +110,11 @@ export default function Home() {
 
       <FlatList
         style={{ flex: 1 }}
-        data={walks}
+        data={tours}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <UIView paddingHorizontal="large">
-            <TripCard walk={item} onPress={() => handleTripPress(item)} />
+            <TripCard tour={item} onPress={() => handleTripPress(item)} />
           </UIView>
         )}
         ListHeaderComponent={renderHeader}

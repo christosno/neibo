@@ -1,5 +1,5 @@
 import { useGetCurrentPosition } from "@/hooks/maps/useGetCurrentPosition";
-import { useWalkProximityDetection } from "@/hooks/maps/useWalkProximityDetection";
+import { useTourProximityDetection } from "@/hooks/maps/useTourProximityDetection";
 import { useCreatePolylines } from "@/hooks/maps/useCreatePolylines";
 import { AppleMaps, CameraPosition } from "expo-maps";
 import { ComponentRef, useMemo, useRef, useState } from "react";
@@ -12,13 +12,13 @@ import { Notification } from "@/ui-kit/feedback/Notification";
 import { Pressable, StyleSheet } from "react-native";
 import { SpotDescriptionModal } from "@/ui-kit/feedback/SpotDescriptionModal";
 import { Ionicons } from "@expo/vector-icons";
-import type { WalkGeocodedSpot } from "@/hooks/maps/useWalkSpots";
+import type { TourGeocodedSpot } from "@/hooks/maps/useTourSpots";
 
-type WalkAppleMapsComponentProps = {
-  spots: WalkGeocodedSpot[];
+type TourAppleMapsComponentProps = {
+  spots: TourGeocodedSpot[];
 };
 
-export function WalkAppleMapsComponent({ spots }: WalkAppleMapsComponentProps) {
+export function TourAppleMapsComponent({ spots }: TourAppleMapsComponentProps) {
   const mapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
   const [currentCameraPosition, setCurrentCameraPosition] =
     useState<CameraPosition>(defaultCameraPosition);
@@ -31,7 +31,7 @@ export function WalkAppleMapsComponent({ spots }: WalkAppleMapsComponentProps) {
   });
 
   // Monitor distance to spots and show description when within reach_radius
-  const { nearbySpot, clearNearbySpot } = useWalkProximityDetection(
+  const { nearbySpot, clearNearbySpot } = useTourProximityDetection(
     userLocation,
     spots
   );

@@ -13,13 +13,14 @@ export default function ProfileLayout() {
           headerRight: () => (
             <Ionicons
               name="person-circle-outline"
-              size={28}
+              size={35}
               color={theme.colors.slateLight}
             />
           ),
         }}
       />
       <Stack.Screen name="createTour" options={{ title: "Create Tour" }} />
+      <Stack.Screen name="myTours" options={{ title: "My Tours" }} />
     </Stack>
   );
 }

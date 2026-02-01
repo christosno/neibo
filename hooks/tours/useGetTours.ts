@@ -1,15 +1,10 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getWalks, type Walk } from "@/services/tours/get-walks";
+import { getTours, type Tour } from "@/services/tours/get-tours";
 
-type UseGetWalksParams = {
-  limit?: number;
-};
-
-export const useGetWalks = () => {
-
+export const useGetTours = () => {
   const result = useInfiniteQuery({
-    queryKey: ["walks"],
-    queryFn: ({ pageParam }) => getWalks({ page: pageParam, limit: 10 }),
+    queryKey: ["tours"],
+    queryFn: ({ pageParam }) => getTours({ page: pageParam, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.data.pagination.hasNext) {
@@ -19,11 +14,11 @@ export const useGetWalks = () => {
     },
   });
 
-  const walks: Walk[] =
+  const tours: Tour[] =
     result.data?.pages.flatMap((page) => page.data.walks) ?? [];
 
   return {
-    walks,
+    tours,
     isLoading: result.isLoading,
     isFetchingNextPage: result.isFetchingNextPage,
     isError: result.isError,

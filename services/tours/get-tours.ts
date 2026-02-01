@@ -1,6 +1,6 @@
 import { http } from "../http/http";
 
-export type Walk = {
+export type Tour = {
   id: string;
   authorId: string;
   name: string;
@@ -13,10 +13,10 @@ export type Walk = {
   updatedAt: string;
 };
 
-export type GetWalksResponse = {
+export type GetToursResponse = {
   message: string;
   data: {
-    walks: Walk[];
+    walks: Tour[];
     pagination: {
       page: number;
       limit: number;
@@ -30,11 +30,11 @@ export type GetWalksResponse = {
   };
 };
 
-export const isGetWalksResponse = (
+export const isGetToursResponse = (
   input: unknown
-): input is GetWalksResponse => {
+): input is GetToursResponse => {
   if (typeof input !== "object" || input === null) return false;
-  const response = input as GetWalksResponse;
+  const response = input as GetToursResponse;
   return (
     typeof response.message === "string" &&
     typeof response.data === "object" &&
@@ -42,16 +42,16 @@ export const isGetWalksResponse = (
   );
 };
 
-type GetWalksParams = {
+type GetToursParams = {
   page?: number;
   limit?: number;
 };
 
-export const getWalks = (params?: GetWalksParams) => {
-  return http.basic<GetWalksResponse>({
+export const getTours = (params?: GetToursParams) => {
+  return http.basic<GetToursResponse>({
     url: "/walks",
     method: "GET",
     params,
-    validator: isGetWalksResponse,
+    validator: isGetToursResponse,
   });
 };

@@ -1,6 +1,6 @@
 import { defaultCameraPosition } from "@/constants/defaultPosition";
 import { useGetCurrentPosition } from "@/hooks/maps/useGetCurrentPosition";
-import { useWalkProximityDetection } from "@/hooks/maps/useWalkProximityDetection";
+import { useTourProximityDetection } from "@/hooks/maps/useTourProximityDetection";
 import { useCreatePolylines } from "@/hooks/maps/useCreatePolylines";
 import { UIDotsLoader } from "@/ui-kit/feedback/UIDotsLoader";
 import { UIView } from "@/ui-kit/layout/UIView";
@@ -10,13 +10,13 @@ import { GoogleMaps } from "expo-maps";
 import { useMemo } from "react";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { SpotDescriptionModal } from "@/ui-kit/feedback/SpotDescriptionModal";
-import type { WalkGeocodedSpot } from "@/hooks/maps/useWalkSpots";
+import type { TourGeocodedSpot } from "@/hooks/maps/useTourSpots";
 
-type WalkGoogleMapsComponentProps = {
-  spots: WalkGeocodedSpot[];
+type TourGoogleMapsComponentProps = {
+  spots: TourGeocodedSpot[];
 };
 
-export function WalkGoogleMapsComponent({ spots }: WalkGoogleMapsComponentProps) {
+export function TourGoogleMapsComponent({ spots }: TourGoogleMapsComponentProps) {
   // Get and watch user location
   const { coordinates: userLocation } = useGetCurrentPosition({
     watch: true,
@@ -25,7 +25,7 @@ export function WalkGoogleMapsComponent({ spots }: WalkGoogleMapsComponentProps)
   });
 
   // Monitor distance to spots and show description when within reach_radius
-  const { nearbySpot, clearNearbySpot } = useWalkProximityDetection(
+  const { nearbySpot, clearNearbySpot } = useTourProximityDetection(
     userLocation,
     spots
   );

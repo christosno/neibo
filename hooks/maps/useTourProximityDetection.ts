@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import type { Coordinates } from "@/hooks/maps/useGetCurrentPosition";
 import { calculateDistance } from "@/utils/location";
-import type { WalkGeocodedSpot } from "./useWalkSpots";
+import type { TourGeocodedSpot } from "./useTourSpots";
 
-type UseWalkProximityDetectionResult = {
-  nearbySpot: WalkGeocodedSpot | null;
+type UseTourProximityDetectionResult = {
+  nearbySpot: TourGeocodedSpot | null;
   clearNearbySpot: () => void;
 };
 
@@ -12,14 +12,14 @@ type UseWalkProximityDetectionResult = {
  * Hook to detect when user is within proximity threshold of tour spots
  * Uses each spot's individual reach_radius for proximity detection
  * @param userLocation Current user coordinates
- * @param spots Array of walk spots with reach_radius
+ * @param spots Array of tour spots with reach_radius
  * @returns nearbySpot and function to clear it
  */
-export const useWalkProximityDetection = (
+export const useTourProximityDetection = (
   userLocation: Coordinates | null,
-  spots: WalkGeocodedSpot[]
-): UseWalkProximityDetectionResult => {
-  const [nearbySpot, setNearbySpot] = useState<WalkGeocodedSpot | null>(null);
+  spots: TourGeocodedSpot[]
+): UseTourProximityDetectionResult => {
+  const [nearbySpot, setNearbySpot] = useState<TourGeocodedSpot | null>(null);
   const [shownSpots, setShownSpots] = useState<Set<number>>(new Set());
 
   // Monitor distance to spots and show description when within reach_radius
