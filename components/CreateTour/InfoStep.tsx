@@ -1,16 +1,19 @@
 import { StyleSheet, Switch } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 
 import { UIView } from "@/ui-kit/layout/UIView";
+import { SafeAreaUIView } from "@/ui-kit/layout/SafeAreaUIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { UITextInput } from "@/ui-kit/inputs/UITextInput";
 import { UIMultiSelect } from "@/ui-kit/inputs/UIMultiSelect";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { theme } from "@/theme";
-import { TOUR_TAGS, type CreateTourFormData } from "@/hooks/create-tour/useCreateTourForm";
+import {
+  TOUR_TAGS,
+  type CreateTourFormData,
+} from "@/hooks/create-tour/useCreateTourForm";
 import { Stepper } from "./Stepper";
 import { WizardStep } from "./types";
 
@@ -31,10 +34,8 @@ export function InfoStep({
   onStepPress,
   onNext,
 }: InfoStepProps) {
-  const insets = useSafeAreaInsets();
-
   return (
-    <UIView expanded color="slateDark">
+    <SafeAreaUIView edges={["bottom"]} expanded color="slateDark">
       <Stepper
         currentStep={currentStep}
         onStepPress={onStepPress}
@@ -43,7 +44,8 @@ export function InfoStep({
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollContent}
         enableOnAndroid={true}
-        extraScrollHeight={100}
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
       >
         <UIView paddingHorizontal="large" paddingTop="medium">
           <UIText size="large" align="left" color="yellow">
@@ -159,10 +161,10 @@ export function InfoStep({
             Next: Add Spots
           </UIButton>
 
-          <UIVerticalSpacer height={theme.spacing.large + insets.bottom} />
+          <UIVerticalSpacer height={theme.spacing.xLarge + 34} />
         </UIView>
       </KeyboardAwareScrollView>
-    </UIView>
+    </SafeAreaUIView>
   );
 }
 
