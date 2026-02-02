@@ -11,7 +11,7 @@ import {
   isRefreshTokenExpiredError,
   isUnauthorizedError,
 } from "./errors";
-import { isAuthenticationServiceResponseBase } from "../authentication/auth-api";
+import { isAuthenticationServiceResponseBase } from "../authentication/auth-schemas";
 import Constants from "expo-constants";
 
 // TODO: Add environment variables
