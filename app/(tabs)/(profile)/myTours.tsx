@@ -2,6 +2,7 @@ import { ActivityIndicator, FlatList } from "react-native";
 import { useAuth } from "@/authentication/useAuth";
 import { UserTour } from "@/services/tours/get-user-tours";
 import { UIView } from "@/ui-kit/layout/UIView";
+import { SafeAreaUIView } from "@/ui-kit/layout/SafeAreaUIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { theme } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -99,15 +100,22 @@ export default function MyTours() {
 
   if (isLoading) {
     return (
-      <UIView color="slateDark" expanded mainAxis="center" crossAxis="center">
+      <SafeAreaUIView
+        edges={["bottom"]}
+        color="slateDark"
+        expanded
+        mainAxis="center"
+        crossAxis="center"
+      >
         <ActivityIndicator size="large" color={theme.colors.greenLight} />
-      </UIView>
+      </SafeAreaUIView>
     );
   }
 
   if (isError) {
     return (
-      <UIView
+      <SafeAreaUIView
+        edges={["bottom"]}
         color="slateDark"
         expanded
         mainAxis="center"
@@ -127,20 +135,20 @@ export default function MyTours() {
             Try again
           </UIText>
         </UIView.Pressable>
-      </UIView>
+      </SafeAreaUIView>
     );
   }
 
   if (tours.length === 0) {
     return (
-      <UIView color="slateDark" expanded>
+      <SafeAreaUIView edges={["bottom"]} color="slateDark" expanded>
         <EmptyState />
-      </UIView>
+      </SafeAreaUIView>
     );
   }
 
   return (
-    <UIView color="slateDark" expanded>
+    <SafeAreaUIView edges={["bottom"]} color="slateDark" expanded>
       <FlatList
         data={tours}
         keyExtractor={(item) => item.id}
@@ -152,6 +160,6 @@ export default function MyTours() {
         onRefresh={refetch}
         refreshing={isLoading}
       />
-    </UIView>
+    </SafeAreaUIView>
   );
 }

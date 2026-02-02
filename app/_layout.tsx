@@ -21,13 +21,20 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <View style={{ flex: 1, backgroundColor: theme.colors.slateDark }}>
         <Stack screenOptions={defaultScreenOptions}>
-        <Stack.Protected guard={!shouldShowLogin}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack.Protected>
-        <Stack.Protected guard={shouldShowLogin}>
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-        </Stack.Protected>
-      </Stack>
+          <Stack.Protected guard={!shouldShowLogin}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack.Protected>
+          <Stack.Protected guard={shouldShowLogin}>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+          </Stack.Protected>
+          <Stack.Screen
+            name="spot-form"
+            options={{
+              presentation: "modal",
+              headerShown: false,
+            }}
+          />
+        </Stack>
       </View>
     </QueryClientProvider>
   );

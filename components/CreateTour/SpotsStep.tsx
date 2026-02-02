@@ -1,20 +1,21 @@
-import { useRef, useMemo, useState, ComponentRef } from "react";
+import { useRef, useMemo, useState, useEffect, ComponentRef } from "react";
 import { StyleSheet, Platform, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppleMaps, GoogleMaps, Coordinates } from "expo-maps";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { UIView } from "@/ui-kit/layout/UIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { UIButton } from "@/ui-kit/buttons/UIButton";
-import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { theme } from "@/theme";
 import { defaultCameraPosition } from "@/constants/defaultPosition";
 import { type SpotFormData } from "@/hooks/create-tour/useCreateTourForm";
-import { SpotFormModal } from "./SpotFormModal";
+import { useSpotFormStore } from "@/hooks/useSpotFormStore";
 import { Stepper } from "./Stepper";
 import { WizardStep } from "./types";
 import { AddressSearchInput } from "./AddressSearchInput";
+import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 
 type SpotsStepProps = {
   spots: SpotFormData[];
@@ -38,12 +39,22 @@ export function SpotsStep({
   const insets = useSafeAreaInsets();
   const appleMapRef = useRef<ComponentRef<typeof AppleMaps.View>>(null);
   const googleMapRef = useRef<ComponentRef<typeof GoogleMaps.View>>(null);
-  const [spotModalVisible, setSpotModalVisible] = useState(false);
-  const [selectedCoordinates, setSelectedCoordinates] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
   const [cameraPosition, setCameraPosition] = useState(defaultCameraPosition);
+
+  const { result, setPendingCoordinates, reset: resetSpotForm } = useSpotFormStore();
+
+  // Listen for spot form results
+  useEffect(() => {
+    if (result) {
+      onAddSpot(result);
+      resetSpotForm();
+    }
+  }, [result, onAddSpot, resetSpotForm]);
+
+  const openSpotForm = (coords: { latitude: number; longitude: number }) => {
+    setPendingCoordinates(coords);
+    router.push("/spot-form");
+  };
 
   const handleAddressSelected = (place: {
     latitude: number;
@@ -60,31 +71,16 @@ export function SpotsStep({
     });
 
     // Select as spot and open the form
-    setSelectedCoordinates({
+    openSpotForm({
       latitude: place.latitude,
       longitude: place.longitude,
     });
-    setSpotModalVisible(true);
   };
 
   const handleMapPress = (event: { coordinates: Coordinates }) => {
     const { latitude, longitude } = event.coordinates;
     if (latitude === undefined || longitude === undefined) return;
-    setSelectedCoordinates({ latitude, longitude });
-    setSpotModalVisible(true);
-  };
-
-  const handleAddSpot = (spotData: Omit<SpotFormData, "positionOrder">) => {
-    setSpotModalVisible(false);
-    setTimeout(() => {
-      onAddSpot(spotData);
-      setSelectedCoordinates(null);
-    }, 100);
-  };
-
-  const handleCloseSpotModal = () => {
-    setSpotModalVisible(false);
-    setSelectedCoordinates(null);
+    openSpotForm({ latitude, longitude });
   };
 
   const markers = useMemo(() => {
@@ -192,11 +188,7 @@ export function SpotsStep({
       )}
 
       {/* Next button */}
-      <UIView
-        padding="large"
-        color="slateDark"
-        style={{ paddingBottom: insets.bottom + theme.spacing.large }}
-      >
+      <UIView padding="large" color="slateDark">
         {spots.length === 0 && (
           <UIView paddingBottom="small">
             <UIText color="slateLight" size="small" align="center">
@@ -214,14 +206,7 @@ export function SpotsStep({
         </UIButton>
       </UIView>
 
-      {/* Spot form modal */}
-      <SpotFormModal
-        visible={spotModalVisible}
-        onClose={handleCloseSpotModal}
-        onSubmit={handleAddSpot}
-        coordinates={selectedCoordinates}
-      />
-      <UIVerticalSpacer height={insets.bottom} />
+      <UIVerticalSpacer height={theme.spacing.xLarge + insets.bottom} />
     </UIView>
   );
 }

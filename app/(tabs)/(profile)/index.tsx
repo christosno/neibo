@@ -2,6 +2,7 @@ import { useAuth } from "@/authentication/useAuth";
 import { ProfileMenuItem } from "@/components/ProfileMenuItem";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { UIView } from "@/ui-kit/layout/UIView";
+import { SafeAreaUIView } from "@/ui-kit/layout/SafeAreaUIView";
 import { UIText } from "@/ui-kit/typography/UIText";
 import { router } from "expo-router";
 
@@ -14,11 +15,12 @@ export default function Profile() {
   };
 
   return (
-    <UIView
+    <SafeAreaUIView
+      edges={["bottom"]}
       color="slateDark"
       paddingTop="large"
       paddingHorizontal="medium"
-      style={{ height: "100%" }}
+      expanded
       mainAxis="flex-start"
       crossAxis="stretch"
       gap="large"
@@ -61,6 +63,6 @@ export default function Profile() {
           />
         )}
       </UIView>
-    </UIView>
+    </SafeAreaUIView>
   );
 }

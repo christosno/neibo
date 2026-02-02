@@ -44,10 +44,7 @@ export function SummaryStep({
       />
 
       <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: insets.bottom + theme.spacing.xxLarge },
-        ]}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <UIView paddingHorizontal="large" paddingTop="medium" gap="large">
@@ -230,11 +227,7 @@ export function SummaryStep({
       )}
 
       {/* Submit button */}
-      <UIView
-        padding="large"
-        color="slateDark"
-        style={{ paddingBottom: insets.bottom + theme.spacing.large }}
-      >
+      <UIView padding="large" color="slateDark">
         <UIButton
           variant="outlined"
           extended
@@ -244,6 +237,8 @@ export function SummaryStep({
           Create Tour
         </UIButton>
       </UIView>
+
+      <UIVerticalSpacer height={theme.spacing.xLarge + insets.bottom} />
     </UIView>
   );
 }

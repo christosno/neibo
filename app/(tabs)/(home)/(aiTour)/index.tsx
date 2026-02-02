@@ -1,5 +1,6 @@
 import { UIButton } from "@/ui-kit/buttons/UIButton";
 import { UIView } from "@/ui-kit/layout/UIView";
+import { SafeAreaUIView } from "@/ui-kit/layout/SafeAreaUIView";
 import { UIVerticalSpacer } from "@/ui-kit/layout/UIVerticalSpacer";
 import { Notification } from "@/ui-kit/feedback/Notification";
 import { UITextInput } from "@/ui-kit/inputs/UITextInput";
@@ -35,7 +36,7 @@ export default function AiTour() {
   };
 
   return (
-    <UIView expanded color="slateDark">
+    <SafeAreaUIView expanded color="slateDark">
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollContent}
         enableOnAndroid={true}
@@ -147,7 +148,7 @@ export default function AiTour() {
           <UIVerticalSpacer height={theme.spacing.large} />
         </UIView>
       </KeyboardAwareScrollView>
-    </UIView>
+    </SafeAreaUIView>
   );
 }
 
