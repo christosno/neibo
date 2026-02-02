@@ -2,6 +2,7 @@ import { useGetCurrentPosition } from "@/hooks/maps/useGetCurrentPosition";
 import { useTourProximityDetection } from "@/hooks/maps/useTourProximityDetection";
 import { useCreatePolylines } from "@/hooks/maps/useCreatePolylines";
 import { AppleMaps, CameraPosition } from "expo-maps";
+import * as Location from "expo-location";
 import { ComponentRef, useMemo, useRef, useState } from "react";
 import { defaultCameraPosition } from "@/constants/defaultPosition";
 import { calculateCameraPosition } from "@/utils/tourMap";
@@ -26,8 +27,9 @@ export function TourAppleMapsComponent({ spots }: TourAppleMapsComponentProps) {
   // Get and watch user location
   const { coordinates: userLocation } = useGetCurrentPosition({
     watch: true,
-    timeInterval: 5000,
-    distanceInterval: 10,
+    timeInterval: 2000,
+    distanceInterval: 5,
+    accuracy: Location.Accuracy.BestForNavigation,
   });
 
   // Monitor distance to spots and show description when within reach_radius
