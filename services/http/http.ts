@@ -110,6 +110,16 @@ export const http: Record<
 };
 
 let refreshingTokenPromise: ReturnType<typeof refreshTokenFn> | undefined;
+let onSessionExpired: (() => void) | undefined;
+
+/**
+ * Register a callback to be called when the session expires (refresh token is invalid).
+ * This allows the auth store to handle logout without circular dependencies.
+ */
+export const setSessionExpiredCallback = (callback: () => void) => {
+  onSessionExpired = callback;
+};
+
 /**
  * Will perform an update token request to the auth service.
  *
@@ -118,7 +128,6 @@ let refreshingTokenPromise: ReturnType<typeof refreshTokenFn> | undefined;
  *
  * This is to prevent multiple calls to the auth service when multiple requests fail with a 401.
  */
-
 export const refreshToken = () => {
   // the trick here, that `refreshingTokenPromise` is global,
   // e.g. 2 expired requests will get and await the same promise, meaning only one call to refresh token will be made
@@ -147,9 +156,10 @@ const refreshTokenFn = async () => {
     });
     return responseData;
   } catch (error) {
-    console.log("🚀 ~ refreshTokenFn ~ error:", error);
+    console.log("Refresh token error:", error);
     if (isRefreshTokenExpiredError(error) || isUnauthorizedError(error)) {
-      // If we fail to refresh the token, trigger a log out through zustand
+      await authData.remove();
+      onSessionExpired?.();
     }
   } finally {
     // Reset the global promise so that subsequent requests will be able refreshToken again
