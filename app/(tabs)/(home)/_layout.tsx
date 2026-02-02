@@ -6,6 +6,7 @@ export default function HomeLayout() {
     <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="index" options={{ title: "Home" }} />
       <Stack.Screen name="(aiTour)" options={{ title: "Create a tour with AI" }} />
+      <Stack.Screen name="tourDetails/[id]" options={{ title: "Tour Details" }} />
       <Stack.Screen name="tour/[id]" options={{ title: "Tour" }} />
     </Stack>
   );

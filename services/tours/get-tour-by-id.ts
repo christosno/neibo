@@ -35,6 +35,7 @@ export type TourDetail = {
   spots: TourSpot[];
   author: TourAuthor;
   walkTags: string[];
+  avgStars: number | null;
 };
 
 type GetTourByIdResponse = {
@@ -42,7 +43,9 @@ type GetTourByIdResponse = {
   data: TourDetail;
 };
 
-const isGetTourByIdResponse = (input: unknown): input is GetTourByIdResponse => {
+const isGetTourByIdResponse = (
+  input: unknown,
+): input is GetTourByIdResponse => {
   if (!input || typeof input !== "object") return false;
   const response = input as GetTourByIdResponse;
   return (

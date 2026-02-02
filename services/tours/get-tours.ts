@@ -9,6 +9,7 @@ export type Tour = {
   duration_estimate?: number | string | null;
   distance_estimate?: number | string | null;
   isPublic?: boolean | null;
+  avgStars?: number | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -31,7 +32,7 @@ export type GetToursResponse = {
 };
 
 export const isGetToursResponse = (
-  input: unknown
+  input: unknown,
 ): input is GetToursResponse => {
   if (typeof input !== "object" || input === null) return false;
   const response = input as GetToursResponse;

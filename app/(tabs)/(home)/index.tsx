@@ -32,7 +32,7 @@ export default function Home() {
   } = useGetTours();
 
   const handleTripPress = (tour: Tour) => {
-    router.push(`/tour/${tour.id}`);
+    router.push(`/tourDetails/${tour.id}`);
   };
 
   const handleEndReached = () => {
